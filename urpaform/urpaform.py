@@ -46,7 +46,9 @@ class Form:
             if element_class.value != value:
                 if element_class.show_in_log:
                     logging.error(
-                        "Value in form: '%s' is not equal to value: '%s'!", element_class.value, log_value
+                        "Value in form: '%s' is not equal to value: '%s'!",
+                        element_class.value,
+                        log_value,
                     )
                 else:
                     logging.error("Value in form is not equal to value!")
