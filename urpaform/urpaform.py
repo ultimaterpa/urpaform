@@ -42,6 +42,13 @@ class Form:
     def _check_values(self):
         for element_class, value in self.elements:
             log_value = __class__.log_value(element_class, value)
+            if not element_class.allow_check:
+                logging.warning(
+                    "Checking for value: '%s' in form: '%s' is not allowed!",
+                    log_value,
+                    self.form_id,
+                )
+                continue
             logging.info("Checking value: '%s' in form: '%s'.", log_value, self.form_id)
             if element_class.value != value:
                 if element_class.show_in_log:
