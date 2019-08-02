@@ -1,8 +1,5 @@
 """Třídy elementů které lze použít v upraform."""
 
-import urpa
-
-
 # Třídy reprezentující obecný prvek formuláře.
 
 
@@ -16,7 +13,9 @@ class _FormElement:
                 element: urpa.AppElement
                     Editbox který třída obsluhuje.
                 show_in_log: bool
-                    Vlajka jestli je možné hodnotu zapsat do logu. 
+                    Vlajka jestli je možné hodnotu zapsat do logu.
+                allow_check: bool
+                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
         """
         self.element = element
         self.show_in_log = show_in_log
@@ -41,7 +40,7 @@ class EditElement(_FormElement):
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
     ):
-        """Inicializace instance třídy _EditElem.
+        """Inicializace instance třídy EditElement.
 
             Args:
                 element: urpa.AppElement
@@ -49,7 +48,7 @@ class EditElement(_FormElement):
                 show_in_log: bool
                     Vlajka jestli je možné hodnotu zapsat do logu.
                 allow_check: bool
-                    Vlajka jestli se má vyplěná hodnota kontrolovat.
+                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
                 value_in_name: bool
                     Nastavení jestli se vyplněná hodnota nachází ve vlastnosti name nebo value.
                 clear_keys: tuple
@@ -65,12 +64,14 @@ class EditElement(_FormElement):
 
     @property
     def value(self):
+        """Getter pro value."""
         if self.value_in_name:
             return self.element.name()
         return self.element.value()
 
     @value.setter
     def value(self, value):
+        """Setter pro value."""
         self.element.set_focus()
         if self.value != value:
             if self.value != self.default_value:
@@ -78,16 +79,30 @@ class EditElement(_FormElement):
             self.element.send_text(value)
 
     def _clear(self):
+        """Vyčistí editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
             self.element.send_key(key)
 
 
 class PasswordElement(_FormElement):
-    """
-    """
+    """Třidá reprezentující password box."""
 
     def __init__(self, element, show_in_log=False, allow_check=False, clear_keys=("CTRL+A", "DEL")):
+        """Inicializace instance třídy PasswordElement.
+
+            Args:
+                element: urpa.AppElement
+                    Editbox který třída obsluhuje.
+                show_in_log: bool
+                    Vlajka jestli je možné hodnotu zapsat do logu.
+                allow_check: bool
+                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                value_in_name: bool
+                    Nastavení jestli se vyplněná hodnota nachází ve vlastnosti name nebo value.
+                clear_keys: tuple
+                    Sada kláves které je třeba stysknout pro vyčistění editboxu.
+        """
         self.clear_keys = clear_keys
         super().__init__(element, show_in_log, allow_check)
 
@@ -104,6 +119,43 @@ class PasswordElement(_FormElement):
         self.element.send_text(value)
 
     def _clear(self):
+        """Vyčistí editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
             self.element.send_key(key)
+
+
+class CheckElement(_FormElement):
+    """Třída pro Checkbox ve formuláři."""
+
+    @property
+    def value(self):
+        """Getter pro value."""
+        return self.element.toggle_state()
+
+    @value.setter
+    def value(self, value):
+        """Setter pro value."""
+        if not isinstance(value, bool):
+            raise TypeError("CheckBox muze mit jen hodnoty True nebo False.")
+        self.element.set_focus()
+        if self.value != value:
+            self.element.send_mouse_click()
+
+
+class RadioElement(_FormElement):
+    """Třída pro Radio button ve formuláři."""
+
+    @property
+    def value(self):
+        """Getter pro value."""
+        return self.element.selected()
+
+    @value.setter
+    def value(self, value):
+        """Setter pro value."""
+        if not isinstance(value, bool):
+            raise TypeError("RadioButton muze mit jen hodnoty True nebo False.")
+        self.element.set_focus()
+        if self.value != value:
+            self.element.send_mouse_click()
