@@ -159,3 +159,49 @@ class RadioElement(_FormElement):
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
+
+
+class ComboElement(_FormElement):
+    """Třída pro Combobox ve formuláři."""
+
+    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
+        """Inicializace pro Combobox.
+
+            Args:
+                element: urpa.AppElement
+                    Editbox který třída obsluhuje.
+                show_in_log: bool
+                    Vlajka jestli je možné hodnotu zapsat do logu.
+                allow_check: bool
+                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                walk_type. bool
+                    Vlajka jakou metodou se má nastavit hodnota.
+        """
+        self.walk_type = walk_type
+        super().__init__(element, show_in_log, allow_check)
+
+    @property
+    def value(self):
+        """Getter pro value."""
+        return self.element.value()
+
+    @value.setter
+    def value(self, value):
+        """Setter pro value."""
+        if self.walk_type:
+            self._walk_setter(value)
+        else:
+            self._default_setter(value)
+
+    def _default_setter(self, value):
+        """Výchozí setter pro value."""
+        self.element.set_focus()
+        if self.value != value:
+            self.element.send_text(value)
+
+    def _walk_setter(self, value):
+        """Setter pro value pro Combobox, který nelze vyplnit metodou send_text."""
+        self.element.set_focus()
+        self.element.send_key("HOME")
+        while self.value != value:
+            self.element.send_key("DOWN")
