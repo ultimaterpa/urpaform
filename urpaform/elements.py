@@ -1,21 +1,19 @@
-"""Třídy elementů které lze použít v upraform."""
-
-# Třídy reprezentující obecný prvek formuláře.
+﻿"""Classes for elements that can be used in urpaform module."""
 
 
 class _FormElement:
-    """Třída reprezentuje obecný prvek formuláře a nelze použít v urpaform."""
+    """A private class representing a common element in a form."""
 
     def __init__(self, element, show_in_log=True, allow_check=True):
-        """Inicializace instance třídy _EditElem.
+        """Initiates instances of the _EditElem class.
 
             Args:
                 element: urpa.AppElement
-                    Editbox který třída obsluhuje.
+                    Editbox maintained by the class.
                 show_in_log: bool
-                    Vlajka jestli je možné hodnotu zapsat do logu.
+                    A flag used to log the values.
                 allow_check: bool
-                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                    A flag used to check the value after being filled in a form.
         """
         self.element = element
         self.show_in_log = show_in_log
@@ -29,7 +27,8 @@ class _FormElement:
 
 
 class EditElement(_FormElement):
-    """Třída reprezentující obecný editbox formuláře."""
+    """A class used to represent a common Editbox in a form."""
+
 
     def __init__(
         self,
@@ -40,22 +39,22 @@ class EditElement(_FormElement):
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
     ):
-        """Inicializace instance třídy EditElement.
+        """Initiates instances of the EditElement class.
 
             Args:
                 element: urpa.AppElement
-                    Editbox který třída obsluhuje.
+                    Editbox maintained by the class.
                 show_in_log: bool
-                    Vlajka jestli je možné hodnotu zapsat do logu.
+                    A flag used to log the values.
                 allow_check: bool
-                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                    A flag used to check the value after being filled in a form.
                 value_in_name: bool
-                    Nastavení jestli se vyplněná hodnota nachází ve vlastnosti name nebo value.
+                    Determines whether the value being filled in is placed in name or value attribute.
                 clear_keys: tuple
-                    Sada kláves které je třeba stysknout pro vyčistění editboxu.
+                    Keys used to clear the editbox.
                 default_value: str
-                    Řetězec napevno předvyplněné hodnoty, kterou nelze vyčistit. Například
-                    předvyplěné tečky pro datum.
+                    A string of default value, that cannot be removed from the editbox. For example,
+                    predefined dots for a date.
         """
         self.value_in_name = value_in_name
         self.clear_keys = clear_keys
@@ -64,14 +63,14 @@ class EditElement(_FormElement):
 
     @property
     def value(self):
-        """Getter pro value."""
+        """Getter for value."""
         if self.value_in_name:
             return self.element.name()
         return self.element.value()
 
     @value.setter
     def value(self, value):
-        """Setter pro value."""
+        """Setter for value."""
         self.element.set_focus()
         if self.value != value:
             if self.value != self.default_value:
@@ -79,128 +78,130 @@ class EditElement(_FormElement):
             self.element.send_text(value)
 
     def _clear(self):
-        """Vyčistí editbox."""
+        """Clears the editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
             self.element.send_key(key)
 
 
 class PasswordElement(_FormElement):
-    """Třidá reprezentující password box."""
+    """A class used to represent a Passwordbox in a form."""
 
     def __init__(self, element, show_in_log=False, allow_check=False, clear_keys=("CTRL+A", "DEL")):
-        """Inicializace instance třídy PasswordElement.
+        """Iniciates instances of the PasswordElement class.
 
             Args:
                 element: urpa.AppElement
-                    Editbox který třída obsluhuje.
+                    Editbox for password maintained by the class.
                 show_in_log: bool
-                    Vlajka jestli je možné hodnotu zapsat do logu.
+                    A flag used to log the values.
                 allow_check: bool
-                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                    A flag used to check the value after being filled in a form.
                 value_in_name: bool
-                    Nastavení jestli se vyplněná hodnota nachází ve vlastnosti name nebo value.
+                    Determines whether the value being filled in is placed in name or value attribute.
                 clear_keys: tuple
-                    Sada kláves které je třeba stysknout pro vyčistění editboxu.
+                    Keys used to clear the editbox.
         """
         self.clear_keys = clear_keys
         super().__init__(element, show_in_log, allow_check)
 
     @property
     def value(self):
-        """Getter pro value."""
+        """Getter for value."""
         return ""
 
     @value.setter
     def value(self, value):
-        """Setter pro value."""
+        """Setter for value."""
         self.element.set_focus()
         self._clear()
         self.element.send_text(value)
 
     def _clear(self):
-        """Vyčistí editbox."""
+        """Clears the editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
             self.element.send_key(key)
 
 
 class CheckElement(_FormElement):
-    """Třída pro Checkbox ve formuláři."""
+    """A class used to represent a Checkbox in a form."""
 
     @property
     def value(self):
-        """Getter pro value."""
+        """Getter for value."""
         return self.element.toggle_state()
 
     @value.setter
     def value(self, value):
-        """Setter pro value."""
+        """Setter for value."""
         if not isinstance(value, bool):
-            raise TypeError("CheckBox muze mit jen hodnoty True nebo False.")
+            raise TypeError("Only True or Falsse value is allowed for CheckBox.")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
 
 
 class RadioElement(_FormElement):
-    """Třída pro Radio button ve formuláři."""
+    """A class used to represent a Radio button in a form."""
 
     @property
     def value(self):
-        """Getter pro value."""
+        """Getter for value."""
         return self.element.selected()
 
     @value.setter
     def value(self, value):
-        """Setter pro value."""
+        """Setter for value."""
         if not isinstance(value, bool):
-            raise TypeError("RadioButton muze mit jen hodnoty True nebo False.")
+            raise TypeError("Only True or False value is allowed for RadioButton.")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
 
 
 class ComboElement(_FormElement):
-    """Třída pro Combobox ve formuláři."""
+    """A class used to represent a Combobox in a form."""
 
     def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
-        """Inicializace pro Combobox.
+        """Initiates instances of the Combobox class.
 
             Args:
                 element: urpa.AppElement
-                    Editbox který třída obsluhuje.
+                    Editbox maintained by the class.
                 show_in_log: bool
-                    Vlajka jestli je možné hodnotu zapsat do logu.
+                    A flag used to log the values.
                 allow_check: bool
-                    Vlajka jestli se má hodnota po vyplnění kontrolovat.
+                    A flag used to check the value after being filled in a form.
                 walk_type. bool
-                    Vlajka jakou metodou se má nastavit hodnota.
+                    A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
 
     @property
     def value(self):
-        """Getter pro value."""
+        """Getter for value."""
         return self.element.value()
 
     @value.setter
     def value(self, value):
-        """Setter pro value."""
+        """Setter for value."""
         if self.walk_type:
             self._walk_setter(value)
         else:
             self._default_setter(value)
 
     def _default_setter(self, value):
-        """Výchozí setter pro value."""
+        """Default setter for value."""
         self.element.set_focus()
         if self.value != value:
             self.element.send_text(value)
 
     def _walk_setter(self, value):
-        """Setter pro value pro Combobox, který nelze vyplnit metodou send_text."""
+        """Setter for value in a Combobox, where the send_text method
+        cannot be used to set the value up.
+        """
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
