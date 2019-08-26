@@ -136,7 +136,7 @@ class CheckElement(_FormElement):
     def value(self, value):
         """Setter for value."""
         if not isinstance(value, bool):
-            raise TypeError("Only True or Falsse value is allowed for CheckBox.")
+            raise TypeError("Only True or False value is allowed for CheckBox.")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
