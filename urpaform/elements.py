@@ -53,7 +53,7 @@ class EditElement(_FormElement):
                 clear_keys: tuple
                     Keys used to clear the editbox.
                 default_value: str
-                    A string of default value, that cannot be removed from the editbox. For example,
+                    A string of default value that cannot be removed from the editbox. For example,
                     predefined dots for a date.
         """
         self.value_in_name = value_in_name
