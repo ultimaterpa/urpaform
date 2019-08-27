@@ -1,4 +1,4 @@
-"""Modul pro vyplňování formulářů v nástroji UltimateRPA."""
+"""Module for filling in forms with UltimateRPA."""
 
 __version__ = "0.0.001"
 
@@ -69,4 +69,4 @@ class Form:
 
 
 class FormError(ValueError):
-    """Pokud se nepodaří robotovi správně vyplnit formulář."""
+    """If the Robot can not fill in the form correctly."""
