@@ -179,7 +179,7 @@ class ComboElement(_FormElement):
                 walk_type: bool
                     Vlajka jakou metodou se má nastavit hodnota.
                 max_try: int
-                    Promena urcujcí maximalni pocet stejných prvku v Combo boxu, tyká se jen walk_type = True
+                    Proměnná určující maximální počet stejných prvků v Combo boxu, tyká se jen walk_type = True
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
