@@ -177,7 +177,7 @@ class ComboElement(_FormElement):
                 walk_type: bool
                     A flag used to determine the method for setting the value up.
                 max_try: int
-                    Promena urcujcí maximalni pocet stejných prvku v Combo boxu, tyká se jen walk_type = True
+                    Variable which set max attempts for completing combo box, Used only for walk_type = True
         """
         self.max_try = max_try
         self.walk_type = walk_type
