@@ -206,15 +206,11 @@ class ComboElement(_FormElement):
     def _walk_setter(self, value):
         """Setter pro value pro Combobox, který nelze vyplnit metodou send_text."""
         element_counter = Counter()
-        end_loop = False
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
             element_counter.update([self.value])
             for element in element_counter.items():
                 if element[1] >= self.max_try:
-                    end_loop = True
-                    break
-            if end_loop:
-                break
+                    return
             self.element.send_key("DOWN")
