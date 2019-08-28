@@ -1,5 +1,7 @@
 """Třídy elementů které lze použít v upraform."""
 
+from collections import Counter
+
 # Třídy reprezentující obecný prvek formuláře.
 
 
@@ -164,7 +166,7 @@ class RadioElement(_FormElement):
 class ComboElement(_FormElement):
     """Třída pro Combobox ve formuláři."""
 
-    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
+    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False, max_try=2):
         """Inicializace pro Combobox.
 
             Args:
@@ -174,8 +176,10 @@ class ComboElement(_FormElement):
                     Vlajka jestli je možné hodnotu zapsat do logu.
                 allow_check: bool
                     Vlajka jestli se má hodnota po vyplnění kontrolovat.
-                walk_type. bool
+                walk_type: bool
                     Vlajka jakou metodou se má nastavit hodnota.
+                max_try: int
+                    Promena urcujcí maximalni pocet stejných prvku v Combo boxu, tyká se jen walk_type = True
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
@@ -201,7 +205,16 @@ class ComboElement(_FormElement):
 
     def _walk_setter(self, value):
         """Setter pro value pro Combobox, který nelze vyplnit metodou send_text."""
+        element_counter = Counter()
+        end_loop = False
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
+            element_counter.update([self.value])
+            for element in element_counter.items():
+                if element[1] >= self.max_try:
+                    end_loop = True
+                    break
+            if end_loop:
+                break
             self.element.send_key("DOWN")
