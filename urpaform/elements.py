@@ -204,6 +204,6 @@ class ComboElement(_FormElement):
         self.element.send_key("HOME")
         while self.value != value:
             value_counter.update([self.value])
-            if value_counter[self.value] > self.max_count:
+            if value_counter[self.value] >= self.max_count:
                 raise ValueError("Value cannot be found in combo box by using _walk_setter function!")
             self.element.send_key("DOWN")
