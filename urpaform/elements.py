@@ -172,7 +172,6 @@ class ComboElement(_FormElement):
                 walk_type: bool
                     A flag used to determine the method for setting the value up.
         """
-        self.max_count = 3
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
 
@@ -200,6 +199,7 @@ class ComboElement(_FormElement):
         cannot be used to set the value up.
         """
         value_counter = Counter()
+        self.max_count = 3
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
