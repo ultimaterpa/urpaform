@@ -132,7 +132,7 @@ class CheckElement(_FormElement):
     def value(self, value):
         """Setter for value."""
         if not isinstance(value, bool):
-            raise TypeError("Only True or False value is allowed for CheckBox.")
+            raise TypeError("Only True or False value is allowed for CheckBox!")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
@@ -149,8 +149,8 @@ class RadioElement(_FormElement):
     @value.setter
     def value(self, value):
         """Setter for value."""
-        if not isinstance(value, bool):
-            raise TypeError("Only True or False value is allowed for RadioButton.")
+        if not value is True:
+            raise TypeError("Only True value is allowed for RadioButton!")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
