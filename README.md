@@ -1,8 +1,8 @@
 # urpaform
 
-Extension for filling in forms with [UltimateRPA](https://www.ultimaterpa.com). 
-You need to have the [UltimateRPA Tools](https://www.ultimaterpa.com/documentation/_install.html) installed.
-Urpaform allows you to 
+Extension for filling in forms with [UltimateRPA](https://www.ultimaterpa.com).  
+You need to have the [UltimateRPA Tools installed](https://www.ultimaterpa.com/documentation/_install.html).  
+Urpaform allows you to   
 - distinguish between several forms in your robotization, 
 - assign form fields of various types to a specific form,
 - maintain the form fields.
@@ -10,7 +10,7 @@ Urpaform allows you to
 
 ## Examples 
 
-### Basic usage - Form with a simple Editbox
+### Basic Usage - Form with a Simple Edit Box
 
 The name given to the form appears in logs. A form field type is specified 
 as EditElement, added to a form, assigned with the desired value to be filled in 
@@ -29,11 +29,11 @@ test_form.complete()
 ```
 
 
-### Options for Logging and Checks.
+### Options for Logging and Checks
 
 For several form field types, you can determine whether the filled values 
 appear in logs. You can also control whether the check of desired value and truly filled 
-in value will be performed. 
+value will be performed. 
 
 ```python
 from urpaform import Form, ComboElement
@@ -47,12 +47,12 @@ test_form.complete()
 ```
 
 
-### Setting specific behavior of elements - Comboboxes.
+### Setting Specific Behavior of Elements - Combo Boxes
 
-Based on specific behavior of the Combobox in your form, you can choose the method 
+Based on specific behavior of the combo box in your form, you can choose the method 
 to fill in your desired value. Many would accept the desired value as a text. For others,
 you may need to activate the walk_type to walk through all available values in the 
-Combobox to find the desired one.
+combo box to find the desired one.
 
 It is recommended to use the default method and to use the other method only if the 
 default method fails to set the value in your Combobox.
@@ -72,9 +72,9 @@ test_form.complete()
 ```
 
 
-### Maintaining Checkboxes and Radiobuttons.
+###  Maintaining Check Boxes and Radio Buttons
 
-You can check and uncheck Checkboxes in your forms, as well as activate Radiobuttons.
+You can check and uncheck check boxes in your forms, as well as activate radio buttons.
 
 ```python
 from urpaform import Form, CheckElement, RadioElement
@@ -93,7 +93,7 @@ test_form.add(radio_field, True)
 test_form.complete()
 ```
 
-## Expected updates for later versions of urpaform
+## Expected Updates for Later Versions of Urpaform
 
 - Solution for adding multiple fields at a time to a form. At the moment, 
 only a single field can be added at a time using `add()` method. 
