@@ -2,12 +2,14 @@
 
 early alpha version
 
-Extension for filling in forms with [UltimateRPA](https://www.ultimaterpa.com). 
-Urpaform allows you to distinguish between several forms in your robotization, 
+- Extension for filling in forms with [UltimateRPA](https://www.ultimaterpa.com). 
+- Urpaform allows you to distinguish between several forms in your robotization, 
 assign form fields of various types to a specific form and maintain those fields.
 
 
-## Example - Basic usage - form with a simple Editbox
+## Examples 
+
+### Basic usage - form with a simple Editbox
 
 The name given to the form appears in logs. A form field type is specified 
 as EditElement, added to a form, assigned with the desired value to be filled in 
@@ -26,7 +28,7 @@ form_app.complete()
 ```
 
 
-## Example - Options for Logging and Checks.
+### Options for Logging and Checks.
 
 For several form field types, you can determine whether the filled values 
 appear in logs. You can also control whether the check of desired value and truly filled 
@@ -45,12 +47,15 @@ def main():
 ```
 
 
-## Example - Setting specific behavior of elements - Comboboxes.
+### Setting specific behavior of elements - Comboboxes.
 
 Based on specific behavior of the Combobox in your form, you can choose the method 
 to fill in your desired value. Many would accept the desired value as a text. For others,
 you may need to activate the walk_type to walk through all available values in the 
 Combobox to find the desired one.
+
+It is recommended to use the default method and to use the other method only if the 
+default method fails to set the value in your Combobox.
 
 ```python
 from urpaform import Form, ComboElement
@@ -68,7 +73,9 @@ def main():
 ```
 
 
-## Example - Maintaining Checkboxes and Radiobuttons.
+### Maintaining Checkboxes and Radiobuttons.
+
+You can check and uncheck Checkboxes in your forms, as well as activate RadioButtons.
 
 ```python
 from urpaform import Form, CheckElement, RadioElement
