@@ -164,7 +164,7 @@ class RadioElement(_FormElement):
 class ComboElement(_FormElement):
     """A class used to represent a Combobox in a form."""
 
-    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False, max_try=2):
+    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
         """Initiates instances of the Combobox class.
 
             Args:
@@ -176,10 +176,8 @@ class ComboElement(_FormElement):
                     A flag used to check the value after being filled in a form.
                 walk_type: bool
                     A flag used to determine the method for setting the value up.
-                max_try: int
-                    Variable which set max attempts for completing combo box, Used only for walk_type = True
         """
-        self.max_try = max_try
+        self.max_count = 3
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
 
@@ -206,11 +204,11 @@ class ComboElement(_FormElement):
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
-        element_counter = Counter()
+        value_counter = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
-            element_counter.update([self.value])
-            if element_counter[self.value] >= self.max_try:
-                raise ValueError("Value cannot be found in combo box by using _walk_setter function.")
+            value_counter.update([self.value])
+            if value_counter[self.value] > self.max_count:
+                raise ValueError("Value cannot be found in combo box by using _walk_setter function!")
             self.element.send_key("DOWN")
