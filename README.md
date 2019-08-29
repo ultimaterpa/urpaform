@@ -51,11 +51,11 @@ test_form.complete()
 
 Based on specific behavior of the combo box in your form, you can choose the method 
 to fill in your desired value. Many would accept the desired value as a text. For others,
-you may need to activate the walk_type to walk through all available values in the 
+you may need to activate the `walk_type` to walk through all available values in the 
 combo box to find the desired one.
 
 It is recommended to use the default method and to use the other method only if the 
-default method fails to set the value in your Combobox.
+default method fails to set the value in your combo box.
 
 ```python
 from urpaform import Form, ComboElement
