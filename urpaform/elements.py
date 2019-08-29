@@ -29,7 +29,6 @@ class _FormElement:
 class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
-
     def __init__(
         self,
         element,

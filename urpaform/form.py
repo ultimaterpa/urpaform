@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Form:
     def __init__(self, form_id="default_form_id", attempts=3):
         self.elements = []
