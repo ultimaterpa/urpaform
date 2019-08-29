@@ -4,7 +4,7 @@ __version__ = "0.0.001"
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 
 class Form:
@@ -22,13 +22,13 @@ class Form:
 
     def complete(self):
         for attempt in range(1, self.attempts + 1):
-            logging.info("This is %d. attempt to complete form: '%s'.", attempt, self.form_id)
+            logger.info("This is %d. attempt to complete form: '%s'.", attempt, self.form_id)
             self._fill_values()
             try:
                 self._check_values()
             except FormError:
                 continue
-            logging.info("Form: '%s' successfully completed.", self.form_id)
+            logger.info("Form: '%s' successfully completed.", self.form_id)
             break
         else:
             raise FormError("Fatal error in form: '%s'!" % self.form_id)
@@ -36,29 +36,29 @@ class Form:
     def _fill_values(self):
         for element_class, value in self.elements:
             log_value = __class__.log_value(element_class, value)
-            logging.info("Fill in value: '%s' in form: '%s'.", log_value, self.form_id)
+            logger.info("Fill in value: '%s' in form: '%s'.", log_value, self.form_id)
             element_class.value = value
 
     def _check_values(self):
         for element_class, value in self.elements:
             log_value = __class__.log_value(element_class, value)
             if not element_class.allow_check:
-                logging.warning(
+                logger.warning(
                     "Checking for value: '%s' in form: '%s' is not allowed!",
                     log_value,
                     self.form_id,
                 )
                 continue
-            logging.info("Checking value: '%s' in form: '%s'.", log_value, self.form_id)
+            logger.info("Checking value: '%s' in form: '%s'.", log_value, self.form_id)
             if element_class.value != value:
                 if element_class.show_in_log:
-                    logging.error(
+                    logger.error(
                         "Value in form: '%s' is not equal to value: '%s'!",
                         element_class.value,
                         log_value,
                     )
                 else:
-                    logging.error("Value in form is not equal to value!")
+                    logger.error("Value in form is not equal to value!")
                 raise FormError
 
     @staticmethod

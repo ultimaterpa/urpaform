@@ -30,7 +30,6 @@ class _FormElement:
 class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
-
     def __init__(
         self,
         element,
@@ -88,7 +87,7 @@ class EditElement(_FormElement):
 class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
-    def __init__(self, element, show_in_log=False, allow_check=False, clear_keys=("CTRL+A", "DEL")):
+    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL")):
         """Iniciates instances of the PasswordElement class.
 
             Args:
@@ -96,15 +95,11 @@ class PasswordElement(_FormElement):
                     Editbox for password maintained by the class.
                 show_in_log: bool
                     A flag used to log the values.
-                allow_check: bool
-                    A flag used to check the value after being filled in a form.
-                value_in_name: bool
-                    Determines whether the value being filled in is placed in name or value attribute.
                 clear_keys: tuple
                     Keys used to clear the editbox.
         """
         self.clear_keys = clear_keys
-        super().__init__(element, show_in_log, allow_check)
+        super().__init__(element, show_in_log, allow_check=False)
 
     @property
     def value(self):
@@ -137,7 +132,7 @@ class CheckElement(_FormElement):
     def value(self, value):
         """Setter for value."""
         if not isinstance(value, bool):
-            raise TypeError("Only True or False value is allowed for CheckBox.")
+            raise TypeError("Only True or False value is allowed for CheckBox!")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
@@ -154,8 +149,8 @@ class RadioElement(_FormElement):
     @value.setter
     def value(self, value):
         """Setter for value."""
-        if not isinstance(value, bool):
-            raise TypeError("Only True or False value is allowed for RadioButton.")
+        if not value is True:
+            raise TypeError("Only True value is allowed for RadioButton!")
         self.element.set_focus()
         if self.value != value:
             self.element.send_mouse_click()
