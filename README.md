@@ -27,7 +27,18 @@ test_form = Form("my forms's name")
 test_form.add(edit_field, "UltimateRPA")
 test_form.complete()
 ```
+Alternatively, you can take advantage of a context manager to complete the form.
 
+```python
+
+from urpaform import Form, EditElement
+
+app = urpa.exec_app("Some_application.exe")
+edit_element = app.find_first(cf.name("Username").edit())
+edit_field = EditElement(edit_element)
+with Form("my forms's name") as test_form:
+      test_form.add(edit_field, "UltimateRPA")
+```
 
 ### Options for Logging and Checks
 
@@ -43,6 +54,25 @@ combo_element = app.find_first(cf.name("Usual").combo_box())
 combo_field = ComboElement(combo_element, show_in_log=True, allow_check=False)
 test_form = Form("my forms's name")
 test_form.add(combo_field, "Saturday")
+test_form.complete()
+```
+
+### Maintaining a Password Box
+
+Maintenance of a password box is similar to an edit box. However, the filled 
+value in a password box cannot be checked. The password itself can be stored in 
+Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
+in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).
+
+```python
+from urpaform import PasswordElement
+
+app = urpa.exec_app("Some_application.exe")
+password = urpa.get_password(system, user)
+password_element = app.find_first(cf.name("Password").edit())
+password_field = PasswordElement(password_element)
+test_form = Form("my forms's name")
+test_form.add(password_field, password)
 test_form.complete()
 ```
 
