@@ -83,8 +83,8 @@ When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.htm
 You can control the respective set up with `value_in_name` parameter.
 - Some can contain a default value that cannot be removed from the edit box. For example, 
 predefined dots for a date. You can use the `default_value` parameter.
-- Finally, you have an option to define your own set of keys with `clear_keys` to clear the field,
-in case the default setting fails for your application.
+- Finally, you have an option to define your own combination of keys with `clear_keys` to clear 
+the field, in case the default setting fails for your application.
 
 ```python
 
