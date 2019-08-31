@@ -40,6 +40,31 @@ with Form("my forms's name") as test_form:
       test_form.add(edit_field, "UltimateRPA")
 ```
 
+### Adding Multiple Fields
+
+You can add multiple fields to your form one by one with the `add()` method. Or you can also 
+use the `add_multiple()` method. This time, pass the `element_class` and `value` as 
+a tuple for each of the `new_elements` you want to add.
+
+```python
+
+from urpaform import Form, EditElement
+
+def main():
+    app = urpa.exec_app("Some_application.exe")
+    first_edit_element = app.find_first(cf.name("Name").edit())
+    first_edit_field = EditElement(first_edit_element)
+    second_edit_element = app.find_first(cf.name("Surname").edit())
+    second_edit_field = EditElement(second_edit_element)
+    with Form("my forms's name") as test_form:
+        test_form.add_multiple(
+            (
+                (first_edit_field, "John"),
+                (second_edit_field, "Smith"),
+            )
+        )
+```
+
 ### Options for Logging and Checks
 
 For several form field types, you can determine whether the filled values 
@@ -125,5 +150,3 @@ test_form.complete()
 
 ## Expected Updates for Later Versions of Urpaform
 
-- Solution for adding multiple fields at a time to a form. At the moment, 
-only a single field can be added at a time using `add()` method. 

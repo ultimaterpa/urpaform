@@ -26,6 +26,10 @@ class Form:
     def add(self, element_class, value):
         self.elements.append((element_class, value))
 
+    def add_multiple(self, new_elements):
+        for element_class, value in new_elements:
+            self.elements.append((element_class, value))
+
     def complete(self):
         for attempt in range(1, self.attempts + 1):
             logger.info("This is %d. attempt to complete form: '%s'.", attempt, self.form_id)
