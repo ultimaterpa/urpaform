@@ -173,6 +173,7 @@ class ComboElement(_FormElement):
                     A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
+        self.WALK_SETTER_MAX_COUNT = 3
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -198,12 +199,11 @@ class ComboElement(_FormElement):
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
-        value_counter = Counter()
-        self.max_count = 3
+        walk_setter_counter = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
-            value_counter.update([self.value])
-            if value_counter[self.value] >= self.max_count:
-                raise ValueError("Value cannot be found in combo box by using _walk_setter function!")
+            walk_setter_counter.update([self.value])
+            if walk_setter_counter.get(self.value, 0) >= self.WALK_SETTER_MAX_COUNT:
+                raise ValueError("Value cannot be set in combo box!")
             self.element.send_key("DOWN")
