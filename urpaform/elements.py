@@ -1,4 +1,4 @@
-﻿"""Classes for elements that can be used in urpaform module."""
+"""Classes for elements that can be used in urpaform module."""
 
 from collections import Counter
 
