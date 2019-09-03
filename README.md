@@ -24,7 +24,7 @@ app = urpa.exec_app("Some_application.exe")
 edit_element = app.find_first(cf.name("Username").edit())
 edit_field = EditElement(edit_element)
 test_form = Form("my forms's name")
-test_form.add(edit_field, "UltimateRPA")
+test_form.add_individual(edit_field, "UltimateRPA")
 test_form.complete()
 ```
 Alternatively, you can take advantage of a context manager to complete the form.
@@ -37,14 +37,14 @@ app = urpa.exec_app("Some_application.exe")
 edit_element = app.find_first(cf.name("Username").edit())
 edit_field = EditElement(edit_element)
 with Form("my forms's name") as test_form:
-      test_form.add(edit_field, "UltimateRPA")
+      test_form.add_individual(edit_field, "UltimateRPA")
 ```
 
 ### Adding Multiple Fields
 
-You can add multiple fields to your form one by one with the `add()` method. Or you can also 
-use the `add_multiple()` method. This time, pass the `element_class` and `value` as 
-a tuple for each of the `new_elements` you want to add.
+You can add multiple fields to your form one by one with the `add_individual()` method. Or you can also 
+use the `add_multiple()` method. This time, pass a tuple of tuples with element and value for each of the 
+elements you wish to add.
 
 ```python
 
@@ -78,7 +78,7 @@ app = urpa.exec_app("Some_application.exe")
 combo_element = app.find_first(cf.name("Usual").combo_box())
 combo_field = ComboElement(combo_element, show_in_log=True, allow_check=False)
 test_form = Form("my forms's name")
-test_form.add(combo_field, "Saturday")
+test_form.add_individual(combo_field, "Saturday")
 test_form.complete()
 ```
 
@@ -97,7 +97,29 @@ password = urpa.get_password(system, user)
 password_element = app.find_first(cf.name("Password").edit())
 password_field = PasswordElement(password_element)
 test_form = Form("my forms's name")
-test_form.add(password_field, password)
+test_form.add_individual(password_field, password)
+test_form.complete()
+```
+
+### Setting Specific Behavior of Elements - Edit Elements
+
+When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.html) an edit element, you may discover, that it has some specific behavior.
+- For some, the filled value is placed in value attribute, but for others in the name attribute.
+You can control the respective set up with `value_in_name` parameter.
+- Some can contain a default value that cannot be removed from the edit box. For example, 
+predefined dots for a date. You can use the `default_value` parameter.
+- Finally, you have an option to define your own combination of keys with `clear_keys` to clear 
+the field, in case the default setting fails for your application.
+
+```python
+
+from urpaform import Form, EditElement
+
+app = urpa.exec_app("Some_application.exe")
+edit_element = app.find_first(cf.name("Username").edit())
+edit_field = EditElement(edit_element, value_in_name=True, default_value="  .  .    ")
+test_form = Form("my forms's name")
+test_form.add_individual(edit_field, "UltimateRPA")
 test_form.complete()
 ```
 
@@ -119,10 +141,10 @@ app = urpa.exec_app("Some_application.exe")
 first_combo_element = app.find_first(cf.name("Usual").combo_box())
 first_combo_field = ComboElement(first_combo_element, walk_type=False)
 test_form = Form("my forms's name")
-test_form.add(first_combo_field, "Tuesday")
+test_form.add_individual(first_combo_field, "Tuesday")
 second_combo_element = app.find_first(cf.name("Unusual").combo_box())
 second_combo_field = ComboElement(second_combo_element, walk_type=True)
-test_form.add(second_combo_field, "Saturday")
+test_form.add_individual(second_combo_field, "Saturday")
 test_form.complete()
 ```
 
@@ -138,13 +160,13 @@ app = urpa.exec_app("Some_application.exe")
 test_form = Form("my forms's name")
 first_check_element = app.find_first(cf.name("a)").check_box())
 first_check_field = CheckElement(first_check_element)
-test_form.add(first_check_field, True)
+test_form.add_individual(first_check_field, True)
 second_check_element = app.find_first(cf.name("b)").check_box())
 second_check_field = CheckElement(second_check_element)
-test_form.add(second_check_field, False)
+test_form.add_individual(second_check_field, False)
 radio_element = app.find_first(cf.name("2").radio_button())
 radio_field = RadioElement(radio_element)
-test_form.add(radio_field, True)
+test_form.add_individual(radio_field, True)
 test_form.complete()
 ```
 

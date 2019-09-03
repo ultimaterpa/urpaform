@@ -23,12 +23,11 @@ class Form:
     def __exit__(self, exc_type, exc_value, exc_tb):
         self.complete()
 
-    def add(self, element_class, value):
+    def add_individual(self, element_class, value):
         self.elements.append((element_class, value))
 
-    def add_multiple(self, new_elements):
-        for element_class, value in new_elements:
-            self.elements.append((element_class, value))
+    def add_multiple(self, elements_and_values):
+        self.elements.extend(elements_and_values)
 
     def complete(self):
         for attempt in range(1, self.attempts + 1):
