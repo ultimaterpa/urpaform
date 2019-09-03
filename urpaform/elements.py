@@ -2,6 +2,7 @@
 
 from collections import Counter
 
+
 class _FormElement:
     """A private class representing a common element in a form."""
 
@@ -159,6 +160,8 @@ class RadioElement(_FormElement):
 class ComboElement(_FormElement):
     """A class used to represent a Combobox in a form."""
 
+    _WALK_SETTER_MAX_COUNT = 3
+
     def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
         """Initiates instances of the Combobox class.
 
@@ -173,7 +176,6 @@ class ComboElement(_FormElement):
                     A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
-        self.WALK_SETTER_MAX_COUNT = 3
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -204,6 +206,6 @@ class ComboElement(_FormElement):
         self.element.send_key("HOME")
         while self.value != value:
             walk_setter_counter.update([self.value])
-            if walk_setter_counter.get(self.value, 0) >= self.WALK_SETTER_MAX_COUNT:
-                raise ValueError("Value cannot be set in combo box!")
+            if walk_setter_counter.get(self.value, 0) >= self._WALK_SETTER_MAX_COUNT:
+                raise ValueError(f"Value: '{value}' cannot be set up in combo box!")
             self.element.send_key("DOWN")
