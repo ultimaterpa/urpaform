@@ -1,5 +1,6 @@
 """Classes for elements that can be used in urpaform module."""
 
+from collections import Counter
 
 class _FormElement:
     """A private class representing a common element in a form."""
@@ -168,10 +169,11 @@ class ComboElement(_FormElement):
                     A flag used to log the values.
                 allow_check: bool
                     A flag used to check the value after being filled in a form.
-                walk_type. bool
+                walk_type: bool
                     A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
+        self.WALK_SETTER_MAX_COUNT = 3
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -197,7 +199,11 @@ class ComboElement(_FormElement):
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
+        walk_setter_counter = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
+            walk_setter_counter.update([self.value])
+            if walk_setter_counter.get(self.value, 0) >= self.WALK_SETTER_MAX_COUNT:
+                raise ValueError("Value cannot be set in combo box!")
             self.element.send_key("DOWN")
