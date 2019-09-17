@@ -2,7 +2,7 @@
 
 import logging
 
-from urpaform.elements import _FormElement
+from .elements import _FormElement
 
 logger = logging.getLogger(__name__)
 
