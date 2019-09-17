@@ -40,6 +40,20 @@ with Form("my forms's name") as test_form:
       test_form.add(edit_field, "UltimateRPA")
 ```
 
+Note, that there are several ways to add one or many fields to your form using the `add()` method. 
+For one field, you first pass the element followed by value as two separate parameters. 
+For many fields, you can pass a list or tuple of tuples with elements and values for each field.
+
+```python
+test_form.add(some_edit_field, "some value")
+```
+```python
+test_form.add(((some_edit_field, "some value"),(another_field, "some value"),))
+```
+```python
+test_form.add([(some_edit_field, "some value"),(another_field, "some value"),])
+```
+
 ### Options for Logging and Checks
 
 For several form field types, you can determine whether the filled values 
@@ -144,8 +158,3 @@ radio_field = RadioElement(radio_element)
 test_form.add(radio_field, True)
 test_form.complete()
 ```
-
-## Expected Updates for Later Versions of Urpaform
-
-- Solution for adding multiple fields at a time to a form. At the moment, 
-only a single field can be added at a time using `add()` method. 
