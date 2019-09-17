@@ -1,8 +1,8 @@
 """Module for filling in forms with UltimateRPA."""
 
-__version__ = "0.0.001"
-
 import logging
+
+from urpaform.elements import _FormElement
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,6 @@ class Form:
         self.attempts = attempts
 
     def __repr__(self):
-
         return f"Form: {self.form_id}"
 
     def __enter__(self):
@@ -23,8 +22,16 @@ class Form:
     def __exit__(self, exc_type, exc_value, exc_tb):
         self.complete()
 
-    def add(self, element_class, value):
-        self.elements.append((element_class, value))
+    def add(self, *args):
+        if len(args) == 1 and isinstance(args[0], (tuple, list)):
+            self.elements.extend(args[0])
+        elif len(args) == 2 and isinstance(args[0], _FormElement):
+            self.elements.append((args[0], args[1]))
+        else:
+            raise TypeError(
+                "First argument should be tuple or list, then the second one is ommited"
+                " or first argument is _FormElement and second is the value!"
+            )
 
     def complete(self):
         for attempt in range(1, self.attempts + 1):
