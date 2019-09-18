@@ -36,7 +36,7 @@ class EditElement(_FormElement):
         element,
         show_in_log=True,
         allow_check=True,
-        value_in_name=False,
+        value_is_in="value",
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
     ):
@@ -49,15 +49,15 @@ class EditElement(_FormElement):
                     A flag used to log the values.
                 allow_check: bool
                     A flag used to check the value after being filled in a form.
-                value_in_name: bool
-                    Determines whether the value being filled in is placed in name or value attribute.
+                value_in_name: str
+                    Set the properties where the value is filled.
                 clear_keys: tuple
                     Keys used to clear the editbox.
                 default_value: str
                     A string of default value that cannot be removed from the editbox. For example,
                     predefined dots for a date.
         """
-        self.value_in_name = value_in_name
+        self.value_is_in = value_is_in
         self.clear_keys = clear_keys
         self.default_value = default_value
         super().__init__(element, show_in_log, allow_check)
@@ -65,9 +65,13 @@ class EditElement(_FormElement):
     @property
     def value(self):
         """Getter for value."""
-        if self.value_in_name:
+        if self.value_is_in == "value":
+            return self.element.value()
+        if self.value_is_in == "name":
             return self.element.name()
-        return self.element.value()
+        if self.value_is_in == "text_value":
+            return self.element.text_value().rstrip("\n")
+        raise ValueError()
 
     @value.setter
     def value(self, value):
