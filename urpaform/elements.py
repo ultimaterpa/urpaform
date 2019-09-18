@@ -31,6 +31,8 @@ class _FormElement:
 class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
+    _VALUE_IS_IN = ("value", "name", "text_value")
+
     def __init__(
         self,
         element,
@@ -49,7 +51,7 @@ class EditElement(_FormElement):
                     A flag used to log the values.
                 allow_check: bool
                     A flag used to check the value after being filled in a form.
-                value_in_name: str
+                value_is_in: str
                     Set the properties where the value is filled.
                 clear_keys: tuple
                     Keys used to clear the editbox.
@@ -57,6 +59,8 @@ class EditElement(_FormElement):
                     A string of default value that cannot be removed from the editbox. For example,
                     predefined dots for a date.
         """
+        if value_is_in not in self._VALUE_IS_IN:
+            raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
         self.value_is_in = value_is_in
         self.clear_keys = clear_keys
         self.default_value = default_value
@@ -71,7 +75,6 @@ class EditElement(_FormElement):
             return self.element.name()
         if self.value_is_in == "text_value":
             return self.element.text_value().rstrip("\n")
-        raise ValueError()
 
     @value.setter
     def value(self, value):
