@@ -23,14 +23,14 @@ class Form:
         self.complete()
 
     def add(self, *args):
-        if len(args) == 1 and isinstance(args[0], (tuple, list)):
-            self.elements.extend(args[0])
-        elif len(args) == 2 and isinstance(args[0], _FormElement):
+        if len(args) == 2 and isinstance(args[0], _FormElement):
             self.elements.append((args[0], args[1]))
+        elif all(isinstance(e, tuple) for e in args):
+            self.elements.extend(args)
         else:
             raise TypeError(
-                "First argument should be tuple or list, then the second one is ommited"
-                " or first argument is _FormElement and second is the value!"
+                "Method expects either two arguments, where first is an element and "
+                "second is a value or any number of tuple arguments!"
             )
 
     def complete(self):
