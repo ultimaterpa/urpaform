@@ -49,7 +49,7 @@ Alternatively, you can add multiple fields at once by passing any number of tupl
 test_form.add(some_edit_field, "some value")
 
 # adding 2 fields as tuples
-test_form.add((some_edit_field, "some value"),(another_field, "some value"))
+test_form.add((some_edit_field, "some value"), (another_field, "some value"))
 ```
 
 ### Options for Logging and Checks
@@ -91,7 +91,7 @@ test_form.complete()
 ### Setting Specific Behavior of Elements - Edit Elements
 
 When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.html) an edit element, you may discover, that it has some specific behavior.
-- For most, the filled value is placed in value attribute, but for others in the name attribute or even the text_value attribute.
+- For most, the filled value is placed in value property, but for others in the name property or even the text_value property.
 You can control the respective set up with `value_is_in` parameter.
 - Some can contain a default value that cannot be removed from the edit box. For example, 
 predefined dots for a date. You can use the `default_value` parameter.
