@@ -28,7 +28,7 @@ class Form:
                 
                 Args:
                     *args:
-                        Case1: urpa.AppElement, string
+                        Case1: _FormElement, string
                             Element, Value 
                         Case2: Tuple
                             Tuple in format (Element, Value)           
@@ -87,7 +87,7 @@ class Form:
 
     @staticmethod
     def log_value(element_class, value):
-        """Return value if element is enable to show in log."""
+        """Return 'value' if element is enable to show_in_log else return '****'"""
         if element_class.show_in_log:
             return value
         return "****"
