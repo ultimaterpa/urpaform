@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class Form:
+    """A class representing a form."""
     def __init__(self, form_id="default_form_id", attempts=3):
         self.elements = []
         self.form_id = form_id
@@ -23,6 +24,15 @@ class Form:
         self.complete()
 
     def add(self, *args):
+        """Add element to form.
+                
+                Args:
+                    *args:
+                        Case1: urpa.AppElement, string
+                            Element, Value 
+                        Case2: Tuple
+                            Tuple in format (Element, Value)           
+        """
         if len(args) == 2 and isinstance(args[0], _FormElement):
             self.elements.append((args[0], args[1]))
         elif all(isinstance(e, tuple) for e in args):
@@ -34,6 +44,7 @@ class Form:
             )
 
     def complete(self):
+        """Complete elements in form with values."""
         for attempt in range(1, self.attempts + 1):
             logger.info("This is %d. attempt to complete form: '%s'.", attempt, self.form_id)
             self._fill_values()
@@ -76,6 +87,7 @@ class Form:
 
     @staticmethod
     def log_value(element_class, value):
+        """Return value if element is enable to show in log."""
         if element_class.show_in_log:
             return value
         return "****"
