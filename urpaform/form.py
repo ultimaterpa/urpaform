@@ -2,6 +2,9 @@
 
 import logging
 
+from time import sleep
+from typing import Union
+
 from .elements import _FormElement
 
 logger = logging.getLogger(__name__)
@@ -9,10 +12,11 @@ logger = logging.getLogger(__name__)
 
 class Form:
     """A class representing a form."""
-    def __init__(self, form_id="default_form_id", attempts=3):
+    def __init__(self, form_id="default_form_id", attempts=3, delay: Union[int, float] = 0):
         self.elements = []
         self.form_id = form_id
         self.attempts = attempts
+        self.delay = delay
 
     def __repr__(self):
         return f"Form: {self.form_id}"
@@ -62,6 +66,8 @@ class Form:
             log_value = __class__.log_value(element_class, value)
             logger.info("Fill in value: '%s' in form: '%s'.", log_value, self.form_id)
             element_class.value = value
+            if self.delay:
+                sleep(self.delay)
 
     def _check_values(self):
         for element_class, value in self.elements:
