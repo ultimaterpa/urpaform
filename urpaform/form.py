@@ -3,7 +3,6 @@
 import logging
 
 from time import sleep
-from typing import Union
 
 from .elements import _FormElement
 
@@ -12,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Form:
     """A class representing a form."""
-    def __init__(self, form_id="default_form_id", attempts=3, delay: Union[int, float] = 0):
+    def __init__(self, form_id="default_form_id", attempts=3, delay=0):
         self.elements = []
         self.form_id = form_id
         self.attempts = attempts
