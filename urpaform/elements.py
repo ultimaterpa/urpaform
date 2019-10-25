@@ -2,6 +2,8 @@
 
 from collections import Counter
 
+import urpa
+
 
 class _FormElement:
     """A private class representing a common element in a form."""
@@ -41,6 +43,8 @@ class EditElement(_FormElement):
         value_is_in="value",
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
+        clipboard=False,
+        paste_keys="ALT+E+V"
     ):
         """Initiates instances of the EditElement class.
 
@@ -58,12 +62,18 @@ class EditElement(_FormElement):
                 default_value: str
                     A string of default value that cannot be removed from the editbox. For example,
                     predefined dots for a date.
+                clipboard: bool
+                    A flag used to switch from send_text to use of clipboard and send_key for pasting.
+                paste_keys: str
+                    Keys used to paste into the editbox. Default ALT+E+V. Overwrite for CTRL+V or other shortcut.
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
         self.value_is_in = value_is_in
         self.clear_keys = clear_keys
         self.default_value = default_value
+        self.clipboard = clipboard
+        self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -83,7 +93,11 @@ class EditElement(_FormElement):
         if self.value != value:
             if self.value != self.default_value:
                 self._clear()
-            self.element.send_text(value)
+            if self.clipboard:
+                urpa.set_clipboard_text(value)
+                self.element.send_key(self.paste_keys)
+            else:
+                self.element.send_text(value)
 
     def _clear(self):
         """Clears the editbox."""
@@ -95,7 +109,7 @@ class EditElement(_FormElement):
 class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
-    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL")):
+    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), clipboard=False, paste_keys="ALT+E+V"):
         """Iniciates instances of the PasswordElement class.
 
             Args:
@@ -105,8 +119,14 @@ class PasswordElement(_FormElement):
                     A flag used to log the values.
                 clear_keys: tuple
                     Keys used to clear the editbox.
+                clipboard: bool
+                    A flag used to switch from send_text to use of clipboard and send_key for pasting.
+                paste_keys: str
+                    Keys used to paste into the editbox. Default ALT+E+V. Overwrite for CTRL+V or other shortcut.
         """
         self.clear_keys = clear_keys
+        self.clipboard = clipboard
+        self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check=False)
 
     @property
@@ -119,7 +139,11 @@ class PasswordElement(_FormElement):
         """Setter for value."""
         self.element.set_focus()
         self._clear()
-        self.element.send_text(value)
+        if self.clipboard:
+            urpa.set_clipboard_text(value)
+            self.element.send_key(self.paste_keys)
+        else:
+            self.element.send_text(value)
 
     def _clear(self):
         """Clears the editbox."""

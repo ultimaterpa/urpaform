@@ -75,7 +75,8 @@ test_form.complete()
 
 ### Maintaining a Password Box
 
-Maintenance of a password box is similar to an edit box. However, the filled 
+Maintenance of a password box is similar to an edit box. You can even chose
+between keyboard input and pasting just like in edit box. However, the filled 
 value in a password box cannot be checked. The password itself can be stored in 
 Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
 in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).
@@ -99,8 +100,9 @@ When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.htm
 You can control the respective set up with `value_is_in` parameter.
 - Some can contain a default value that cannot be removed from the edit box. For example, 
 predefined dots for a date. You can use the `default_value` parameter.
-- Finally, you have an option to define your own combination of keys with `clear_keys` to clear 
+- You have an option to define your own combination of keys with `clear_keys` to clear 
 the field, in case the default setting fails for your application.
+- In case of troubles with filling edit box with default method using keyboard input, you can try to switch to pasting the value into the field by setting `clipboard` at True and `paste_keys` at any demanded paste shortcut (default ALT+E+V).
 
 ```python
 
