@@ -52,6 +52,10 @@ test_form.add(some_edit_field, "some value")
 test_form.add((some_edit_field, "some value"), (another_field, "some value"))
 ```
 
+If needed, Form can be initialized with custom values for arguments:
+* `attempts`: how many times can be completion of the form attempted (default value is 3)
+* `delay`: how many second should pass between filling of two fields (default value is 0)
+
 ### Options for Logging and Checks
 
 For several form field types, you can determine whether the filled values 
