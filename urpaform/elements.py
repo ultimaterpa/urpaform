@@ -33,9 +33,8 @@ class _FormElement:
 class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
-    _PASTE_KEYS_ARE_IN = ("ALT+E+V", "CTRL+V")
     _VALUE_IS_IN = ("value", "name", "text_value")
-    _SEND_METHOD_IS_IN = ("send_text", "send_key")
+    _SEND_METHOD_IS_IN = ("writing", "pasting")
 
     def __init__(
         self,
@@ -45,7 +44,7 @@ class EditElement(_FormElement):
         value_is_in="value",
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
-        send_method="send_text",
+        send_method="writing",
         paste_keys="CTRL+V"
     ):
         """Initiates instances of the EditElement class.
@@ -65,9 +64,9 @@ class EditElement(_FormElement):
                     A string of default value that cannot be removed from the editbox. For example,
                     predefined dots for a date.
                 send_method: str
-                    A string to specify the method of sending the value. Default value send_text. Overwrite for send_key.
+                    A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
                 paste_keys: str
-                    Keys used to paste into the editbox. Default CTRL+V. Overwrite for ALT+E+V.
+                    Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -78,9 +77,6 @@ class EditElement(_FormElement):
         if send_method not in self._SEND_METHOD_IS_IN:
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
-        paste_keys = paste_keys.upper()
-        if paste_keys not in self._PASTE_KEYS_ARE_IN:
-            raise ValueError(f"Value in argument paste_keys must be from: '{self._PASTE_KEYS_ARE_IN}'!")
         self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check)
 
@@ -101,9 +97,9 @@ class EditElement(_FormElement):
         if self.value != value:
             if self.value != self.default_value:
                 self._clear()
-            if self.send_method == "send_text":
+            if self.send_method == "writing":
                 self.element.send_text(value)
-            elif self.send_method == "send_key":
+            elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
 
@@ -117,11 +113,10 @@ class EditElement(_FormElement):
 class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
-    _PASTE_KEYS_ARE_IN = ("ALT+E+V", "CTRL+V")
-    _SEND_METHOD_IS_IN = ("send_text", "send_key")
+    _SEND_METHOD_IS_IN = ("writing", "pasting")
 
-    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), send_method="send_text",
-                 paste_keys="ALT+E+V"):
+    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), send_method="writing",
+                 paste_keys="CTRL+V"):
         """Iniciates instances of the PasswordElement class.
 
             Args:
@@ -132,18 +127,15 @@ class PasswordElement(_FormElement):
                 clear_keys: tuple
                     Keys used to clear the editbox.
                 send_method: str
-                    A string to specify the method of sending the value. Default value send_text. Overwrite for send_key.
+                    A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
                 paste_keys: str
-                    Keys used to paste into the editbox. Default ALT+E+V. Overwrite for CTRL+V or other shortcut.
+                    Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
         if send_method not in self._SEND_METHOD_IS_IN:
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
-        paste_keys = paste_keys.upper()
-        if paste_keys not in self._PASTE_KEYS_ARE_IN:
-            raise ValueError(f"Value in argument paste_keys must be from: '{self._PASTE_KEYS_ARE_IN}'!")
         self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check=False)
 
@@ -157,9 +149,9 @@ class PasswordElement(_FormElement):
         """Setter for value."""
         self.element.set_focus()
         self._clear()
-        if self.send_method == "send_text":
+        if self.send_method == "writing":
             self.element.send_text(value)
-        elif self.send_method == "send_key":
+        elif self.send_method == "pasting":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
 

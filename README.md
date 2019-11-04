@@ -102,7 +102,7 @@ You can control the respective set up with `value_is_in` parameter.
 predefined dots for a date. You can use the `default_value` parameter.
 - You have an option to define your own combination of keys with `clear_keys` to clear 
 the field, in case the default setting fails for your application.
-- There is na alternative way to fill an edit box (default method is `send_text` using keyboard input). You can switch to pasting the value into the field from clipboard by setting `send_method` at `send_key` and `paste_keys` at demanded paste shortcut (default CTRL+V, allowed ALT+E+V).
+- There is na alternative way to fill an edit box (default method is `writing` using keyboard input). You can switch to pasting the value into the field from clipboard by setting `send_method` at `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
 
 ```python
 
