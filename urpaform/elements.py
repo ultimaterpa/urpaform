@@ -35,8 +35,9 @@ class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
     _VALUE_IS_IN = ("value", "name", "text_value")
-    _SEND_METHOD_IS_IN = ("writing", "pasting", "setting")
+    _SEND_METHOD_IS_IN = ("writing", "pasting", "set_value")
     _CLEAR_METHOD_IS_IN = ("keys", "set_empty_string", "no_clearing")
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
         self,
@@ -49,6 +50,7 @@ class EditElement(_FormElement):
         default_value: str = "",
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
+        focus_action: str = "Default",
     ) -> None:
         """Initiates instances of the EditElement class.
 
@@ -69,9 +71,12 @@ class EditElement(_FormElement):
                 A string of default value that cannot be removed from the editbox. For example,
                 predefined dots for a date.
             send_method: str
-                A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
+                A string to specify the method of sending the value. Default value writing.
+                Overwrite for pasting or set_value.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+            focus_action: str
+                A flag, which specifies the focus action
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -86,6 +91,9 @@ class EditElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -102,7 +110,7 @@ class EditElement(_FormElement):
     @value.setter
     def value(self, value: str) -> None:
         """Setter for value."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         time.sleep(0.2)
         if self.value != value:
             if self.value != self.default_value:
@@ -112,12 +120,12 @@ class EditElement(_FormElement):
             elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
-            elif self.send_method == "setting":
+            elif self.send_method == "set_value":
                 self.element.set_value(value)
 
     def _clear(self) -> None:
         """Clears the editbox."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         if self.clear_method == "keys":
             for key in self.clear_keys:
                 self.element.send_key(key)
@@ -130,7 +138,8 @@ class EditElement(_FormElement):
 class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
-    _SEND_METHOD_IS_IN = ("writing", "pasting")
+    _SEND_METHOD_IS_IN = ("writing", "pasting", "set_value")
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
         self,
@@ -139,6 +148,7 @@ class PasswordElement(_FormElement):
         clear_keys: tuple = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
+        focus_action: str = "Default",
     ) -> None:
         """Iniciates instances of the PasswordElement class.
 
@@ -153,6 +163,8 @@ class PasswordElement(_FormElement):
                 A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+            focus_action: str
+                A flag, which specifies the focus action
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
@@ -160,6 +172,9 @@ class PasswordElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
         super().__init__(element, show_in_log, allow_check=False)
 
     @property
@@ -170,23 +185,41 @@ class PasswordElement(_FormElement):
     @value.setter
     def value(self, value: str) -> None:
         """Setter for value."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         self._clear()
         if self.send_method == "writing":
             self.element.send_text(value)
         elif self.send_method == "pasting":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
+        elif self.send_method == "set_value":
+            self.element.set_value(value)
 
     def _clear(self) -> None:
         """Clears the editbox."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         for key in self.clear_keys:
             self.element.send_key(key)
 
 
 class CheckElement(_FormElement):
     """A class used to represent a Checkbox in a form."""
+
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
+
+    def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
+        """Iniciates instances of the CheckElement class.
+
+        Args:
+            element: urpa.AppElement
+                Editbox for password maintained by the class.
+            focus_action: str
+                A flag, which specifies the focus action
+        """
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
+        super().__init__(element)
 
     @property
     def value(self) -> bool:
@@ -198,13 +231,29 @@ class CheckElement(_FormElement):
         """Setter for value."""
         if not isinstance(value, bool):
             raise TypeError("Only True or False value is allowed for CheckBox!")
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         if self.value != value:
             self.element.send_mouse_click()
 
 
 class RadioElement(_FormElement):
     """A class used to represent a Radio button in a form."""
+
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
+
+    def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
+        """Iniciates instances of the CheckElement class.
+
+        Args:
+            element: urpa.AppElement
+                Editbox for password maintained by the class.
+            focus_action: str
+                A flag, which specifies the focus action
+        """
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
+        super().__init__(element)
 
     @property
     def value(self) -> bool:
@@ -216,7 +265,7 @@ class RadioElement(_FormElement):
         """Setter for value."""
         if value is not True:
             raise TypeError("Only True value is allowed for RadioButton!")
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         if self.value != value:
             self.element.send_mouse_click()
 
@@ -226,9 +275,15 @@ class ComboElement(_FormElement):
 
     _WALK_SETTER_MAX_COUNT = 3
     _SET_METHOD_IS_IN = ("text", "walk", "set_value")
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
-        self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True, set_method: str = "text"
+        self,
+        element: urpa.AppElement,
+        show_in_log: bool = True,
+        allow_check: bool = True,
+        set_method: str = "text",
+        focus_action: str = "Default",
     ) -> None:
         """Initiates instances of the Combobox class.
 
@@ -242,10 +297,15 @@ class ComboElement(_FormElement):
             set_method: str
                 A string to specify the method of setting the value. Default value text.
                 Overwrite for walk or set_value.
+            focus_action: str
+                A flag, which specifies the focus action
         """
         if set_method not in self._SET_METHOD_IS_IN:
             raise ValueError(f"Value in argument send_method must be from: '{self._SET_METHOD_IS_IN}'!")
         self.set_method = set_method
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -265,13 +325,13 @@ class ComboElement(_FormElement):
 
     def _default_setter(self, value: str) -> None:
         """Default setter for value."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         if self.value != value:
             self.element.send_text(value)
 
     def _set_setter(self, value: str) -> None:
         """Setter for value in Combobox with set_value method."""
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         if self.value != value:
             self.element.set_value(value)
 
@@ -280,7 +340,7 @@ class ComboElement(_FormElement):
         cannot be used to set the value up.
         """
         walk_setter_counter: Counter = Counter()
-        self.element.set_focus()
+        self.element.set_focus(self.focus_action)
         self.element.send_key("HOME")
         while self.value != value:
             walk_setter_counter.update([self.value])
