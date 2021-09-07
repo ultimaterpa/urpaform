@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Form:
     """A class representing a form."""
+
     def __init__(self, form_id="default_form_id", attempts=3, delay=0):
         self.elements = []
         self.form_id = form_id
@@ -28,13 +29,13 @@ class Form:
 
     def add(self, *args):
         """Add element to form.
-                
-                Args:
-                    *args:
-                        Case1: _FormElement, string
-                            Element, Value 
-                        Case2: Tuple
-                            Tuple in format (Element, Value)           
+
+        Args:
+            *args:
+                Case1: _FormElement, string
+                    Element, Value
+                Case2: Tuple
+                    Tuple in format (Element, Value)
         """
         if len(args) == 2 and isinstance(args[0], _FormElement):
             self.elements.append((args[0], args[1]))
