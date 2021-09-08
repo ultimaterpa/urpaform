@@ -100,9 +100,10 @@ When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.htm
 You can control the respective set up with `value_is_in` parameter.
 - Some can contain a default value that cannot be removed from the edit box. For example, 
 predefined dots for a date. You can use the `default_value` parameter.
-- You have an option to define your own combination of keys with `clear_keys` to clear 
-the field, in case the default setting fails for your application.
-- There is na alternative way to fill an edit box (default method is `writing` using keyboard input). You can switch to pasting the value into the field from clipboard by setting `send_method` at `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
+- The default `clear_method` is set to `keys` with an option to define your own combination of keys with `clear_keys` to clear the field (in case the default setting fails for your application). 
+- Alternatively, you can overwrite `clear_method` with `set_value` to empty the field via MSAA interface.
+- There are more ways to fill an edit box with a value. The default `send_method` is `writing` using keyboard input. You can switch to pasting the value into the field from clipboard by setting `send_method` to `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
+And finally, you can overwrite the `send_method` with `set_value` to set the value of your object via MSAA interface.
 
 ```python
 
