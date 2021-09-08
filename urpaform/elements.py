@@ -11,13 +11,13 @@ class _FormElement:
     def __init__(self, element, show_in_log=True, allow_check=True):
         """Initiates instances of the _EditElem class.
 
-            Args:
-                element: urpa.AppElement
-                    Editbox maintained by the class.
-                show_in_log: bool
-                    A flag used to log the values.
-                allow_check: bool
-                    A flag used to check the value after being filled in a form.
+        Args:
+            element: urpa.AppElement
+                Editbox maintained by the class.
+            show_in_log: bool
+                A flag used to log the values.
+            allow_check: bool
+                A flag used to check the value after being filled in a form.
         """
         self.element = element
         self.show_in_log = show_in_log
@@ -45,28 +45,28 @@ class EditElement(_FormElement):
         clear_keys=("CTRL+A", "DEL"),
         default_value="",
         send_method="writing",
-        paste_keys="CTRL+V"
+        paste_keys="CTRL+V",
     ):
         """Initiates instances of the EditElement class.
 
-            Args:
-                element: urpa.AppElement
-                    Editbox maintained by the class.
-                show_in_log: bool
-                    A flag used to log the values.
-                allow_check: bool
-                    A flag used to check the value after being filled in a form.
-                value_is_in: str
-                    Set the properties where the value is filled.
-                clear_keys: tuple
-                    Keys used to clear the editbox.
-                default_value: str
-                    A string of default value that cannot be removed from the editbox. For example,
-                    predefined dots for a date.
-                send_method: str
-                    A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
-                paste_keys: str
-                    Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+        Args:
+            element: urpa.AppElement
+                Editbox maintained by the class.
+            show_in_log: bool
+                A flag used to log the values.
+            allow_check: bool
+                A flag used to check the value after being filled in a form.
+            value_is_in: str
+                Set the properties where the value is filled.
+            clear_keys: tuple
+                Keys used to clear the editbox.
+            default_value: str
+                A string of default value that cannot be removed from the editbox. For example,
+                predefined dots for a date.
+            send_method: str
+                A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
+            paste_keys: str
+                Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -115,21 +115,22 @@ class PasswordElement(_FormElement):
 
     _SEND_METHOD_IS_IN = ("writing", "pasting")
 
-    def __init__(self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), send_method="writing",
-                 paste_keys="CTRL+V"):
+    def __init__(
+        self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), send_method="writing", paste_keys="CTRL+V"
+    ):
         """Iniciates instances of the PasswordElement class.
 
-            Args:
-                element: urpa.AppElement
-                    Editbox for password maintained by the class.
-                show_in_log: bool
-                    A flag used to log the values.
-                clear_keys: tuple
-                    Keys used to clear the editbox.
-                send_method: str
-                    A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
-                paste_keys: str
-                    Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+        Args:
+            element: urpa.AppElement
+                Editbox for password maintained by the class.
+            show_in_log: bool
+                A flag used to log the values.
+            clear_keys: tuple
+                Keys used to clear the editbox.
+            send_method: str
+                A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
+            paste_keys: str
+                Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
@@ -206,15 +207,15 @@ class ComboElement(_FormElement):
     def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
         """Initiates instances of the Combobox class.
 
-            Args:
-                element: urpa.AppElement
-                    Editbox maintained by the class.
-                show_in_log: bool
-                    A flag used to log the values.
-                allow_check: bool
-                    A flag used to check the value after being filled in a form.
-                walk_type: bool
-                    A flag used to determine the method for setting the value up.
+        Args:
+            element: urpa.AppElement
+                Editbox maintained by the class.
+            show_in_log: bool
+                A flag used to log the values.
+            allow_check: bool
+                A flag used to check the value after being filled in a form.
+            walk_type: bool
+                A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check)
