@@ -48,17 +48,19 @@ class Form:
 
     def complete(self):
         """Complete elements in form with values."""
+        message = ""
         for attempt in range(1, self.attempts + 1):
             logger.info("This is %d. attempt to complete form: '%s'.", attempt, self.form_id)
             self._fill_values()
             try:
                 self._check_values()
-            except FormError:
+            except FormError as e_msg:
+                message = e_msg
                 continue
             logger.info("Form: '%s' successfully completed.", self.form_id)
             break
         else:
-            raise FormError("Fatal error in form: '%s'!" % self.form_id)
+            raise FormError(f"Fatal error in form: {self.form_id} - {message}")
 
     def _fill_values(self):
         for element_class, value in self.elements:
@@ -88,7 +90,7 @@ class Form:
                     )
                 else:
                     logger.error("Value in form is not equal to value!")
-                raise FormError
+                raise FormError(f"Unable to insert correctly '{value}' to '{element_class}'")
 
     @staticmethod
     def log_value(element_class, value):
