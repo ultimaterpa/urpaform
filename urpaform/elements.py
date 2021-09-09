@@ -1,6 +1,7 @@
 """Classes for elements that can be used in urpaform module."""
 
 from collections import Counter
+from typing import Tuple
 
 import urpa
 
@@ -42,7 +43,7 @@ class EditElement(_FormElement):
         show_in_log: bool = True,
         allow_check: bool = True,
         value_is_in: str = "value",
-        clear_keys: tuple = ("CTRL+A", "DEL"),
+        clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         default_value: str = "",
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
@@ -58,7 +59,7 @@ class EditElement(_FormElement):
                 A flag used to check the value after being filled in a form.
             value_is_in: str
                 Set the properties where the value is filled.
-            clear_keys: tuple
+            clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             default_value: str
                 A string of default value that cannot be removed from the editbox. For example,
@@ -120,7 +121,7 @@ class PasswordElement(_FormElement):
         self,
         element: urpa.AppElement,
         show_in_log: bool = False,
-        clear_keys: tuple = ("CTRL+A", "DEL"),
+        clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
     ) -> None:
@@ -131,7 +132,7 @@ class PasswordElement(_FormElement):
                 Editbox for password maintained by the class.
             show_in_log: bool
                 A flag used to log the values.
-            clear_keys: tuple
+            clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             send_method: str
                 A string to specify the method of sending the value. Default value writing. Overwrite for pasting.

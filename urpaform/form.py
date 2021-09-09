@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any, List, Tuple, Union
+from typing import Any, Iterable, Tuple, Union
 
 from .elements import _FormElement
 
@@ -39,7 +39,7 @@ class Form:
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
 
-    def add(self, *args: Union[Tuple[_FormElement, str], List[Tuple[_FormElement, str]]]) -> None:
+    def add(self, *args: Union[Tuple[_FormElement, str], Iterable[Tuple[_FormElement, str]]]) -> None:
         """Add element to form.
 
         Args:
