@@ -78,6 +78,7 @@ class EditElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
+        self.expected_value = ""
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -94,7 +95,7 @@ class EditElement(_FormElement):
     def value(self, value):
         """Setter for value."""
         self.element.set_focus()
-        if self.value != value:
+        if self.value != self.expected_value:
             if self.value != self.default_value:
                 self._clear()
             if self.send_method == "writing":

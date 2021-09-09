@@ -1,9 +1,11 @@
 """Module for filling in forms with UltimateRPA."""
 
+from __future__ import annotations
+
 import logging
 from time import sleep
 
-from .elements import _FormElement
+from .elements import EditElement, _FormElement
 
 logger = logging.getLogger(__name__)
 
@@ -38,11 +40,13 @@ class Form:
         """
         if len(args) == 2 and isinstance(args[0], _FormElement):
             self.elements.append((args[0], args[1]))
+        elif len(args) == 3 and isinstance(args[0], _FormElement):
+            self.elements.append((args[0], args[1], args[2]))
         elif all(isinstance(e, tuple) for e in args):
             self.elements.extend(args)
         else:
             raise TypeError(
-                "Method expects either two arguments, where first is an element and "
+                "Method expects either two or three arguments, where first is an element and "
                 "second is a value or any number of tuple arguments!"
             )
 
@@ -61,15 +65,24 @@ class Form:
             raise FormError("Fatal error in form: '%s'!" % self.form_id)
 
     def _fill_values(self):
-        for element_class, value in self.elements:
+        for element in self.elements:
+            element_class, value = element[0], element[1]
             log_value = __class__.log_value(element_class, value)
             logger.info("Fill in value: '%s' in form: '%s'.", log_value, self.form_id)
+            if isinstance(element_class, EditElement):
+                if len(element) == 3:
+                    element_class.expected_value = element[2]
+                else:
+                    element_class.expected_value = value
             element_class.value = value
             if self.delay:
                 sleep(self.delay)
 
     def _check_values(self):
-        for element_class, value in self.elements:
+        for element in self.elements:
+            element_class, value = element[0], element[1]
+            if len(element) == 3:
+                value = element[2]
             log_value = __class__.log_value(element_class, value)
             if not element_class.allow_check:
                 logger.warning(
