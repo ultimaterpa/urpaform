@@ -39,11 +39,15 @@ class Form:
                     Tuple in format (Element, Value)
         """
         if len(args) == 2 and isinstance(args[0], _FormElement):
-            self.elements.append((args[0], args[1]))
+            self.elements.append([args[0], args[1], args[1]])
         elif len(args) == 3 and isinstance(args[0], _FormElement):
-            self.elements.append((args[0], args[1], args[2]))
+            self.elements.append([args[0], args[1], args[2]])
+        # Adding expected value as the third value for each field
         elif all(isinstance(e, tuple) for e in args):
-            self.elements.extend(args)
+            for index, _tuple in enumerate(args):
+                self.elements.append(list(_tuple))
+                if len(_tuple) == 2:
+                    self.elements[index].append(_tuple[1])
         else:
             raise TypeError(
                 "Method expects either two or three arguments, where first is an element and "
@@ -70,19 +74,14 @@ class Form:
             log_value = __class__.log_value(element_class, value)
             logger.info(f"Fill in value: '{log_value}' in form: '{self.form_id}'.")
             if isinstance(element_class, EditElement):
-                if len(element) == 3:
-                    element_class.expected_value = element[2]
-                else:
-                    element_class.expected_value = value
+                element_class.expected_value = element[2]
             element_class.value = value
             if self.delay:
                 sleep(self.delay)
 
     def _check_values(self):
         for element in self.elements:
-            element_class, value = element[0], element[1]
-            if len(element) == 3:
-                value = element[2]
+            element_class, value = element[0], element[2]
             log_value = __class__.log_value(element_class, value)
             if not element_class.allow_check:
                 logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
