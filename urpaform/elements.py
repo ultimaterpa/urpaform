@@ -29,7 +29,6 @@ class _FormElement:
         if focus_action not in self._FOCUS_ACTION_IS_IN:
             raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
         self.focus_action = focus_action
-        urpa.set_default_focus_action(self.focus_action)
 
     def __repr__(self):
         return f"{self.__class__.__name__} with element {self.element}."
@@ -109,7 +108,7 @@ class EditElement(_FormElement):
             if self.value != self.default_value:
                 self._clear()
             if self.send_method == "writing":
-                self.element.send_text(value)
+                self.element.send_text(value, focus_action=self.focus_action)
             elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
@@ -170,7 +169,7 @@ class PasswordElement(_FormElement):
         self.element.set_focus(self.focus_action)
         self._clear()
         if self.send_method == "writing":
-            self.element.send_text(value)
+            self.element.send_text(value, focus_action=self.focus_action)
         elif self.send_method == "pasting":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
@@ -287,7 +286,7 @@ class ComboElement(_FormElement):
         """Default setter for value."""
         self.element.set_focus(self.focus_action)
         if self.value != value:
-            self.element.send_text(value)
+            self.element.send_text(value, focus_action=self.focus_action)
 
     def _walk_setter(self, value):
         """Setter for value in a Combobox, where the send_text method
