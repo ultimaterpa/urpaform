@@ -8,7 +8,9 @@ import urpa
 class _FormElement:
     """A private class representing a common element in a form."""
 
-    def __init__(self, element, show_in_log=True, allow_check=True):
+    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
+
+    def __init__(self, element, show_in_log=True, allow_check=True, focus_action: str = "Default"):
         """Initiates instances of the _EditElem class.
 
         Args:
@@ -18,10 +20,16 @@ class _FormElement:
                 A flag used to log the values.
             allow_check: bool
                 A flag used to check the value after being filled in a form.
+            focus_action: str
+                A flag, which specifies the focus action
         """
         self.element = element
         self.show_in_log = show_in_log
         self.allow_check = allow_check
+        if focus_action not in self._FOCUS_ACTION_IS_IN:
+            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
+        self.focus_action = focus_action
+        urpa.set_default_focus_action(self.focus_action)
 
     def __repr__(self):
         return f"{self.__class__.__name__} with element {self.element}."
@@ -35,7 +43,6 @@ class EditElement(_FormElement):
 
     _VALUE_IS_IN = ("value", "name", "text_value")
     _SEND_METHOD_IS_IN = ("writing", "pasting")
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
         self,
@@ -82,10 +89,7 @@ class EditElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
-        if focus_action not in self._FOCUS_ACTION_IS_IN:
-            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
-        super().__init__(element, show_in_log, allow_check)
+        super().__init__(element, show_in_log, allow_check, focus_action=focus_action)
 
     @property
     def value(self):
@@ -121,7 +125,6 @@ class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
     _SEND_METHOD_IS_IN = ("writing", "pasting")
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
         self,
@@ -154,10 +157,7 @@ class PasswordElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
-        if focus_action not in self._FOCUS_ACTION_IS_IN:
-            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
-        super().__init__(element, show_in_log, allow_check=False)
+        super().__init__(element, show_in_log, allow_check=False, focus_action=focus_action)
 
     @property
     def value(self):
@@ -185,8 +185,6 @@ class PasswordElement(_FormElement):
 class CheckElement(_FormElement):
     """A class used to represent a Checkbox in a form."""
 
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
-
     def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
         """Iniciates instances of the CheckElement class.
 
@@ -196,10 +194,7 @@ class CheckElement(_FormElement):
             focus_action: str
                 A flag, which specifies the focus action
         """
-        if focus_action not in self._FOCUS_ACTION_IS_IN:
-            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
-        super().__init__(element)
+        super().__init__(element, focus_action=focus_action)
 
     @property
     def value(self):
@@ -219,8 +214,6 @@ class CheckElement(_FormElement):
 class RadioElement(_FormElement):
     """A class used to represent a Radio button in a form."""
 
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
-
     def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
         """Iniciates instances of the CheckElement class.
 
@@ -230,10 +223,7 @@ class RadioElement(_FormElement):
             focus_action: str
                 A flag, which specifies the focus action
         """
-        if focus_action not in self._FOCUS_ACTION_IS_IN:
-            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
-        super().__init__(element)
+        super().__init__(element, focus_action=focus_action)
 
     @property
     def value(self):
@@ -254,7 +244,6 @@ class ComboElement(_FormElement):
     """A class used to represent a Combobox in a form."""
 
     _WALK_SETTER_MAX_COUNT = 3
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
 
     def __init__(
         self,
@@ -279,10 +268,7 @@ class ComboElement(_FormElement):
                 A flag, which specifies the focus action
         """
         self.walk_type = walk_type
-        if focus_action not in self._FOCUS_ACTION_IS_IN:
-            raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
-        super().__init__(element, show_in_log, allow_check)
+        super().__init__(element, show_in_log, allow_check, focus_action=focus_action)
 
     @property
     def value(self):
