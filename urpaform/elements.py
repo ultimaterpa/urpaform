@@ -98,7 +98,6 @@ class EditElement(_FormElement):
             return self.element.name()
         if self.value_is_in == "text_value":
             return self.element.text_value().rstrip("\n")
-        return ""
 
     @value.setter
     def value(self, value):
@@ -257,9 +256,9 @@ class ComboElement(_FormElement):
         elif self.set_method == "set_value":
             self._set_setter(value)
         elif self.set_method == "text":
-            self._default_setter(value)
+            self._text_setter(value)
 
-    def _default_setter(self, value):
+    def _text_setter(self, value):
         """Default setter for value."""
         self.element.set_focus()
         if self.value != value:
