@@ -41,17 +41,13 @@ with Form("my forms's name") as test_form:
 ```
 
 Note, that there are several ways to add one or many fields to your form using the `add()` method.  
-You can add fields separately one by one, by passing two parameters (or three in case of EditElement), where is an element followed by a value and eventually by expected value.
-Expected value is useful, if a field has special formatting, for example a field with a date. 
-As you can see on the example below, you are sending value "12022021", but then you have to check, if the field has value "12.02.2021".
+You can add fields separately one by one by passing two parameters, where an element is followed by a value.  
+Or three parameters, if you use EditElement class, where first argument is element, second is inserted value and third is expected value.
 Alternatively, you can add multiple fields at once by passing any number of tuples with elements and values for each field.
 
 ```python
 # adding 1 field
 test_form.add(some_edit_field, "some value")
-
-# adding 1 EditElement field
-test_form.add(some_edit_field, "12022021", "12.02.2021")
 
 # adding 2 fields as tuples
 test_form.add((some_edit_field, "some value"), (another_field, "some value"))
@@ -108,7 +104,6 @@ predefined dots for a date. You can use the `default_value` parameter.
 - You have an option to define your own combination of keys with `clear_keys` to clear 
 the field, in case the default setting fails for your application.
 - There is na alternative way to fill an edit box (default method is `writing` using keyboard input). You can switch to pasting the value into the field from clipboard by setting `send_method` at `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
-- You can specify `expected_value` by adding the third argument. This argument is optional, if you don't specify this, the expected value will be the same as the second argument.
 
 ```python
 
@@ -116,15 +111,10 @@ from urpaform import Form, EditElement
 
 app = urpa.exec_app("Some_application.exe")
 edit_element = app.find_first(cf.name("Username").edit())
-date_elem = app.find_first(cf.name("Date").edit())
 edit_field = EditElement(edit_element, value_is_in="name", default_value="  .  .    ")
-date_field = EditElement(date_elem)
-with Form("my forms's name") as test_form:
-    test_form.add(
-        (edit_field, "UltimateRPA"),
-        (date_field, "02022022", "02.02.2022")
-    )
-
+test_form = Form("my forms's name")
+test_form.add(edit_field, "UltimateRPA")
+test_form.complete()
 ```
 
 
