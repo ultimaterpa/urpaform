@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from time import sleep
+from typing import Any, Iterable, Tuple, Union
 
 from .elements import EditElement, _FormElement
 
@@ -13,22 +14,39 @@ logger = logging.getLogger(__name__)
 class Form:
     """A class representing a form."""
 
-    def __init__(self, form_id="default_form_id", attempts=3, delay=0):
-        self.elements = []
+    def __init__(self, form_id: str = "default_form_id", attempts: int = 3, delay: int = 0) -> None:
+        """Iniciates instance of the Form class.
+
+        Args:
+            form_id: str
+                A custom ID of the form
+            attempts: int
+                Specifies the number of attempts for filling the form
+            delay: int
+                Specifies wait time between each attempt
+        """
+        self.elements: list = []
         self.form_id = form_id
         self.attempts = attempts
         self.delay = delay
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Form: {self.form_id}"
 
-    def __enter__(self):
+    def __enter__(self) -> Form:
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
 
-    def add(self, *args):
+    def add(
+        self,
+        *args: Union[
+            Tuple[_FormElement, str, str],
+            Tuple[_FormElement, str],
+            Iterable[Union[Tuple[_FormElement, str, str], Tuple[_FormElement, str]]],
+        ],
+    ) -> None:
         """Add element to form.
 
         Args:
@@ -54,7 +72,7 @@ class Form:
                 "second is a value or any number of tuple arguments!"
             )
 
-    def complete(self):
+    def complete(self) -> None:
         """Complete elements in form with values."""
         for attempt in range(1, self.attempts + 1):
             logger.info(f"This is {attempt}. attempt to complete form: '{self.form_id}'.")
@@ -68,7 +86,7 @@ class Form:
         else:
             raise FormError(f"Fatal error in form: '{self.form_id}'!")
 
-    def _fill_values(self):
+    def _fill_values(self) -> None:
         for element in self.elements:
             element_class, value = element[0], element[1]
             log_value = __class__.log_value(element_class, value)
@@ -79,7 +97,7 @@ class Form:
             if self.delay:
                 sleep(self.delay)
 
-    def _check_values(self):
+    def _check_values(self) -> None:
         for element in self.elements:
             element_class, value = element[0], element[2]
             log_value = __class__.log_value(element_class, value)
@@ -95,7 +113,7 @@ class Form:
                 raise FormError
 
     @staticmethod
-    def log_value(element_class, value):
+    def log_value(element_class: _FormElement, value: str) -> str:
         """Return 'value' if element is enable to show_in_log else return '****'"""
         if element_class.show_in_log:
             return value
