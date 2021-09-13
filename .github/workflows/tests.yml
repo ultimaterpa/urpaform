@@ -22,7 +22,7 @@ jobs:
           python -m pip install -r requirements_dev.txt
       - name: Lint with pylint
         run: |
-          pylint src
+          pylint urpaform
       - name: Test with pytest
         run: |
           pytest
