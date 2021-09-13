@@ -48,7 +48,7 @@ class Form:
                 Union[Tuple[_FormElement, Union[str, bool], Union[str, bool]], Tuple[_FormElement, Union[str, bool]]]
             ],
         ],
-    ) -> None:
+        ) -> None:
         """Add element to form.
 
         Args:
@@ -88,7 +88,7 @@ class Form:
         else:
             raise FormError(f"Fatal error in form: '{self.form_id}'!")
 
-    def _fill_values(self) -> None:
+    def _fill_values(self):
         for element in self.elements:
             element_class, value = element[0], element[1]
             log_value = __class__.log_value(element_class, value)
@@ -101,11 +101,13 @@ class Form:
 
     def _check_values(self) -> None:
         for element in self.elements:
-            element_class, value = element[0], element[2]
+            element_class, value = element[0], element[1]
+            if len(element) == 3:
+                value = element[2]
             log_value = __class__.log_value(element_class, value)
             if not element_class.allow_check:
-                logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
-                continue
+                    logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
+                    continue
             logger.info(f"Checking value: '{log_value}' in form: '{self.form_id}'.")
             if element_class.value != value:
                 if element_class.show_in_log:
