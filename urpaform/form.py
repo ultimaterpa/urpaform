@@ -55,12 +55,13 @@ class Form:
             try:
                 self._check_values()
             except FormError as e_msg:
+                logger.warning(f"Fatal error in form: '{self.form_id}' - '{message}'")
                 message = e_msg
                 continue
             logger.info(f"Form: '{self.form_id}' successfully completed.")
             break
         else:
-            raise FormError(f"Fatal error in form: {self.form_id} - {message}")
+            raise FormError(f"Fatal error in form: '{self.form_id}' - '{message}'")
 
     def _fill_values(self):
         for element_class, value in self.elements:
