@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any, Iterable, Tuple, Union
+from typing import Any, Iterable, List, Tuple, Union
 
 from .elements import _FormElement
 
@@ -25,7 +25,7 @@ class Form:
             delay: int
                 Specifies wait time between each attempt
         """
-        self.elements: list = []
+        self.elements: list = []  # type: ignore
         self.form_id = form_id
         self.attempts = attempts
         self.delay = delay
@@ -43,10 +43,8 @@ class Form:
         self,
         *args: Union[
             Tuple[_FormElement, Union[str, bool]],
-            Iterable[
-                Union[Tuple[_FormElement, Union[str, bool]]]
-            ],
-        ],
+            Iterable[Tuple[_FormElement, Union[str, bool]]]
+        ]
     ) -> None:
         """Add element to form.
 
@@ -58,7 +56,7 @@ class Form:
                     Tuple in format (Element, Value)
         """
         if len(args) == 2 and isinstance(args[0], _FormElement):
-            self.elements.append((args[0], args[1]))
+            self.elements.append((args[0], args[1]))  # type: ignore
         elif all(isinstance(e, tuple) for e in args):
             self.elements.extend(args)
         else:

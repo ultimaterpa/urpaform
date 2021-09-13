@@ -1,6 +1,8 @@
 """Classes for elements that can be used in urpaform module."""
 
-from typing import Tuple, Counter
+from collections import Counter
+import typing
+from typing import Tuple
 
 import urpa
 
@@ -251,7 +253,7 @@ class ComboElement(_FormElement):
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
-        walk_setter_counter: Counter[str] = Counter()
+        walk_setter_counter: typing.Counter[str] = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:

@@ -28,5 +28,5 @@ jobs:
           pytest
       - name: Check with mypy
         run: |
-          mypy src
+          mypy urpaform
 
