@@ -42,10 +42,9 @@ class Form:
     def add(
         self,
         *args: Union[
-            Tuple[_FormElement, Union[str, bool], Union[str, bool]],
             Tuple[_FormElement, Union[str, bool]],
             Iterable[
-                Union[Tuple[_FormElement, Union[str, bool], Union[str, bool]], Tuple[_FormElement, Union[str, bool]]]
+                Union[Tuple[_FormElement, Union[str, bool]]]
             ],
         ],
     ) -> None:
