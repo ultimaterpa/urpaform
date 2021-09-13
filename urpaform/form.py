@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any, Iterable, List, Tuple, Union
+from typing import Any, Iterable, Tuple, Union
 
 from .elements import _FormElement
 
