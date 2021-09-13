@@ -40,15 +40,14 @@ class Form:
         self.complete()
 
     def add(
-        self,
-        *args: Union[
-            Tuple[_FormElement, Union[str, bool], Union[str, bool]],
-            Tuple[_FormElement, Union[str, bool]],
-            Iterable[
-                Union[Tuple[_FormElement, Union[str, bool], Union[str, bool]], Tuple[_FormElement, Union[str, bool]]]
+            self,
+            *args: Union[
+                Tuple[_FormElement, Union[str, bool], Union[str, bool]],
+                Tuple[_FormElement, Union[str, bool]],
+                Iterable[Union[
+                    Tuple[_FormElement, Union[str, bool], Union[str, bool]], Tuple[_FormElement, Union[str, bool]]]],
             ],
-        ],
-        ) -> None:
+    ) -> None:
         """Add element to form.
 
         Args:
