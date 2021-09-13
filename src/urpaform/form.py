@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any, Iterable, Tuple, Union, List
+from typing import Any, Iterable, Tuple, Union
 
 from .elements import _FormElement
 
@@ -84,7 +84,7 @@ class Form:
 
     def _fill_values(self) -> None:
         for element_class, value in self.elements:
-            log_value = __class__.log_value(element_class, value)
+            log_value = self.__class__.log_value(element_class, value)
             logger.info(f"Fill in value: '{log_value}' in form: '{self.form_id}'.")
             element_class.value = value
             if self.delay:
@@ -92,7 +92,7 @@ class Form:
 
     def _check_values(self) -> None:
         for element_class, value in self.elements:
-            log_value = __class__.log_value(element_class, value)
+            log_value = self.__class__.log_value(element_class, value)
             if not element_class.allow_check:
                 logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
                 continue
