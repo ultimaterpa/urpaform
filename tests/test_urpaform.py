@@ -1,5 +1,5 @@
 
-import src.urpaform
+import urpaform
 
 
 def test_equality():
