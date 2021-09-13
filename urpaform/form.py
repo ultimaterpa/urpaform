@@ -63,10 +63,10 @@ class Form:
             self.elements.append([args[0], args[1], args[2]])
         # Adding expected value as the third value for each field
         elif all(isinstance(e, tuple) for e in args):
-            for index, _tuple in enumerate(args):
+            for _tuple in args:
                 self.elements.append(list(_tuple))
                 if len(_tuple) == 2:
-                    self.elements[index].append(_tuple[1])
+                    self.elements[-1].append(_tuple[1])
         else:
             raise TypeError(
                 "Method expects either two or three arguments, where first is an element and "
@@ -100,7 +100,7 @@ class Form:
 
     def _check_values(self) -> None:
         for element in self.elements:
-            element_class, value = element[0], element[1]
+            element_class, value = element[0], element[2]
             log_value = __class__.log_value(element_class, value)
             if not element_class.allow_check:
                 logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
