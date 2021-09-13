@@ -1,5 +1,7 @@
 # urpaform
 
+![Tests](https://github.com/ultimaterpa/urpaform/actions/workflows/tests.yml/badge.svg)
+
 Extension for filling in forms with [UltimateRPA](https://www.ultimaterpa.com).  
 You need to have the [UltimateRPA Tools installed](https://www.ultimaterpa.com/documentation/_install.html).  
 Urpaform allows you to   
