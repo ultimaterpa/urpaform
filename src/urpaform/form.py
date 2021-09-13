@@ -25,7 +25,7 @@ class Form:
             delay: int
                 Specifies wait time between each attempt
         """
-        self.elements: List[Tuple[_FormElement, Union[str, bool], Union[str, bool]]] = []
+        self.elements: list = []
         self.form_id = form_id
         self.attempts = attempts
         self.delay = delay
