@@ -9,14 +9,14 @@ import urpa
 class _FormElement:
     """A private class representing a common element in a form."""
 
-    _FOCUS_ACTION_IS_IN = ("Default", "Mouse", "None")
+    _FOCUS_ACTION_IS_IN = ("default", "mouse", "none")
 
     def __init__(
         self,
         element: urpa.AppElement,
         show_in_log: bool = True,
         allow_check: bool = True,
-        focus_action: str = "Default",
+        focus_action: str = "default",
     ):
         """Initiates instances of the _EditElem class.
 
@@ -28,14 +28,15 @@ class _FormElement:
             allow_check: bool
                 A flag used to check the value after being filled in a form.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         self.element = element
         self.show_in_log = show_in_log
         self.allow_check = allow_check
         if focus_action not in self._FOCUS_ACTION_IS_IN:
             raise ValueError(f"Value in argument focus_action must be from: '{self._FOCUS_ACTION_IS_IN}'!")
-        self.focus_action = focus_action
+        self.focus_action = focus_action.title()
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} with element {self.element}."
@@ -60,7 +61,7 @@ class EditElement(_FormElement):
         default_value: str = "",
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
-        focus_action: str = "Default",
+        focus_action: str = "default",
     ) -> None:
         """Initiates instances of the EditElement class.
 
@@ -83,7 +84,8 @@ class EditElement(_FormElement):
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -140,7 +142,7 @@ class PasswordElement(_FormElement):
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
-        focus_action: str = "Default",
+        focus_action: str = "default",
     ) -> None:
         """Iniciates instances of the PasswordElement class.
 
@@ -156,7 +158,8 @@ class PasswordElement(_FormElement):
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
@@ -192,14 +195,15 @@ class PasswordElement(_FormElement):
 class CheckElement(_FormElement):
     """A class used to represent a Checkbox in a form."""
 
-    def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
+    def __init__(self, element: urpa.AppElement, focus_action: str = "default") -> None:
         """Iniciates instances of the CheckElement class.
 
         Args:
             element: urpa.AppElement
                 Editbox for password maintained by the class.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         super().__init__(element, focus_action=focus_action)
 
@@ -221,14 +225,15 @@ class CheckElement(_FormElement):
 class RadioElement(_FormElement):
     """A class used to represent a Radio button in a form."""
 
-    def __init__(self, element: urpa.AppElement, focus_action: str = "Default") -> None:
+    def __init__(self, element: urpa.AppElement, focus_action: str = "default") -> None:
         """Iniciates instances of the CheckElement class.
 
         Args:
             element: urpa.AppElement
                 Editbox for password maintained by the class.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         super().__init__(element, focus_action=focus_action)
 
@@ -258,7 +263,7 @@ class ComboElement(_FormElement):
         show_in_log: bool = True,
         allow_check: bool = True,
         walk_type: bool = False,
-        focus_action: str = "Default",
+        focus_action: str = "default",
     ) -> None:
         """Initiates instances of the Combobox class.
 
@@ -272,7 +277,8 @@ class ComboElement(_FormElement):
             walk_type: bool
                 A flag used to determine the method for setting the value up.
             focus_action: str
-                A flag, which specifies the focus action
+                A flag, which specifies the focus action, by default is set to 'default,
+                other options are 'mouse', 'none'
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check, focus_action=focus_action)

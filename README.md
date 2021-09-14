@@ -79,17 +79,17 @@ Sometimes it can come handy, if you can set up, how to focus certain field in a 
 For this purpose, there is optional argument `focus_action`, which defines this functionality.   
 This attribute can be specified for all types of field.
 There are 3 options:   
-- `Default` - set up by default, can be used with a hidden desktop, but takes longer time to process  
-- `Mouse` - the field is enabled with a mouse click  
-- `None` - the field will not be enabled   
+- `default` - set up by default, can be used with a hidden desktop, but takes longer time to process  
+- `mouse` - the field is focused with a mouse click  
+- `none` - the field will not be enabled 
 
 ```python
-from urpaform import EditElement
+from urpaform import EditElement, Form
 
 app = urpa.exec_app("Some_application.exe")
 
 name_element = app.find_first(cf.name("Username").edit())
-name_field = EditElement(name_element, focus_action="Mouse")
+name_field = EditElement(name_element, focus_action="mouse")
 with Form("my forms's name") as test_form:
 	test_form.add(name_field, "John")
 ```
