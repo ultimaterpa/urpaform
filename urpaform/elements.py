@@ -63,15 +63,16 @@ class EditElement(_FormElement):
             value_is_in: str
                 Set the properties where the value is filled.
             clear_method: str
-                A flag used to set the option to clear the field
+                A flag used to set the option to clear the field, by default 'keys',
+                other options are 'set_empty_string' and 'no_clearing'.
             clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             default_value: str
                 A string of default value that cannot be removed from the editbox. For example,
                 predefined dots for a date.
             send_method: str
-                A string to specify the method of sending the value. Default value writing.
-                Overwrite for pasting or set_value.
+                A string to specify the method of sending the value. Default value 'writing'.
+                other options are 'pasting' or 'set_value'.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
@@ -105,7 +106,6 @@ class EditElement(_FormElement):
     def value(self, value: str) -> None:
         """Setter for value."""
         self.element.set_focus()
-        time.sleep(0.2)
         if self.value != value:
             if self.value != self.default_value:
                 self._clear()
@@ -133,11 +133,13 @@ class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
     _SEND_METHOD_IS_IN = ("writing", "pasting", "set_value")
+    _CLEAR_METHOD_IS_IN = ("keys", "set_empty_string", "no_clearing")
 
     def __init__(
         self,
         element: urpa.AppElement,
         show_in_log: bool = False,
+        clear_method: str = "keys",
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
@@ -149,13 +151,20 @@ class PasswordElement(_FormElement):
                 Editbox for password maintained by the class.
             show_in_log: bool
                 A flag used to log the values.
+            clear_method: str
+                A flag used to set the option to clear the field, by default 'keys',
+                other options are 'set_empty_string' and 'no_clearing'
             clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             send_method: str
-                A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
+                A string to specify the method of sending the value. Default value 'writing'.
+                other options are 'pasting' or 'set_value'.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
+        if clear_method not in self._CLEAR_METHOD_IS_IN:
+            raise ValueError(f"Value in argument clear method must be from: '{self._CLEAR_METHOD_IS_IN}'")
+        self.clear_method = clear_method
         self.clear_keys = clear_keys
         send_method = send_method.lower()
         if send_method not in self._SEND_METHOD_IS_IN:
@@ -185,8 +194,13 @@ class PasswordElement(_FormElement):
     def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
-        for key in self.clear_keys:
-            self.element.send_key(key)
+        if self.clear_method == "keys":
+            for key in self.clear_keys:
+                self.element.send_key(key)
+        elif self.clear_method == "set_empty_string":
+            self.element.set_value("")
+        elif self.clear_method == "no_clearing":
+            pass
 
 
 class CheckElement(_FormElement):
@@ -260,12 +274,12 @@ class ComboElement(_FormElement):
     @value.setter
     def value(self, value: str) -> None:
         """Setter for value."""
-        if self.set_method == "walk":
+        if self.set_method == "text":
+            self._text_setter(value)
+        elif self.set_method == "walk":
             self._walk_setter(value)
         elif self.set_method == "set_value":
             self._set_setter(value)
-        elif self.set_method == "text":
-            self._text_setter(value)
 
     def _text_setter(self, value: str) -> None:
         """Default setter for value."""

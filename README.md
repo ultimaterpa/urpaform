@@ -79,7 +79,11 @@ Maintenance of a password box is similar to an edit box. You can even chose
 between keyboard input and pasting just like in edit box. However, the filled 
 value in a password box cannot be checked. The password itself can be stored in 
 Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
-in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).
+in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).  
+There is optional argument 'clear_method', which can have values: 
+- "keys" - set by default, value will be deleted with the keyboard shortcut "CTRL+A" + "DEL"
+- "set_empty_string" - value inside the field will be changed to an empty string
+- "no_clearing - nothing will happen, value will remain inside the field
 
 ```python
 from urpaform import PasswordElement
@@ -87,7 +91,7 @@ from urpaform import PasswordElement
 app = urpa.exec_app("Some_application.exe")
 password = urpa.get_password(system, user)
 password_element = app.find_first(cf.name("Password").edit())
-password_field = PasswordElement(password_element)
+password_field = PasswordElement(password_element, clear_method="set_empty_string")
 test_form = Form("my forms's name")
 test_form.add(password_field, password)
 test_form.complete()
@@ -122,8 +126,12 @@ test_form.complete()
 
 Based on specific behavior of the combo box in your form, you can choose the method 
 to fill in your desired value. Many would accept the desired value as a text. For others,
-you may need to activate the `walk_type` to walk through all available values in the 
-combo box to find the desired one.
+you have to change optional argument `set_method`.   
+There are 3 options:
+- "text" - set by default, value inside the combo box will be filled by writing a given text
+- "walk" - value will be choosen by walking through all available values in the 
+combo box to find the desired one
+- "set_value" - whole text value will be set inside the combo box
 
 It is recommended to use the default method and to use the other method only if the 
 default method fails to set the value in your combo box.
@@ -133,11 +141,11 @@ from urpaform import Form, ComboElement
 
 app = urpa.exec_app("Some_application.exe")
 first_combo_element = app.find_first(cf.name("Usual").combo_box())
-first_combo_field = ComboElement(first_combo_element, walk_type=False)
+first_combo_field = ComboElement(first_combo_element, set_method="walk")
 test_form = Form("my forms's name")
 test_form.add(first_combo_field, "Tuesday")
 second_combo_element = app.find_first(cf.name("Unusual").combo_box())
-second_combo_field = ComboElement(second_combo_element, walk_type=True)
+second_combo_field = ComboElement(second_combo_element, set_method="set_value")
 test_form.add(second_combo_field, "Saturday")
 test_form.complete()
 ```
