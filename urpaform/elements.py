@@ -4,6 +4,7 @@ from collections import Counter
 from typing import Tuple
 
 import urpa
+from urpaform.utils import clear_clipboard
 
 
 class _FormElement:
@@ -104,6 +105,7 @@ class EditElement(_FormElement):
             elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
+                clear_clipboard()
 
     def _clear(self) -> None:
         """Clears the editbox."""
@@ -162,6 +164,7 @@ class PasswordElement(_FormElement):
         elif self.send_method == "pasting":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
+            clear_clipboard()
 
     def _clear(self) -> None:
         """Clears the editbox."""
