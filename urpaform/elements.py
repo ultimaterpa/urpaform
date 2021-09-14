@@ -79,7 +79,7 @@ class EditElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
-        self.expected_value = ""
+        self.expected_value = None
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -228,6 +228,7 @@ class ComboElement(_FormElement):
                 A flag used to determine the method for setting the value up.
         """
         self.walk_type = walk_type
+        self.expected_value = None
         super().__init__(element, show_in_log, allow_check)
 
     @property
@@ -246,7 +247,7 @@ class ComboElement(_FormElement):
     def _default_setter(self, value: str) -> None:
         """Default setter for value."""
         self.element.set_focus()
-        if self.value != value:
+        if self.value != self.expected_value:
             self.element.send_text(value)
 
     def _walk_setter(self, value: str) -> None:
@@ -256,7 +257,7 @@ class ComboElement(_FormElement):
         walk_setter_counter: Counter = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
-        while self.value != value:
+        while self.value != self.expected_value:
             walk_setter_counter.update([self.value])
             if walk_setter_counter.get(self.value, 0) >= self._WALK_SETTER_MAX_COUNT:
                 raise ValueError(f"Value: '{value}' cannot be set up in combo box!")

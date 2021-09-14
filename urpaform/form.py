@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any, Iterable, Tuple, Union
+from typing import Any
 
+from .aliases import FORM_ELEMENTS_WITH_VALUES
 from .elements import EditElement, _FormElement
 
 logger = logging.getLogger(__name__)
@@ -39,15 +40,7 @@ class Form:
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
 
-    def add(
-            self,
-            *args: Union[
-                Tuple[_FormElement, Union[str, bool], Union[str, bool]],
-                Tuple[_FormElement, Union[str, bool]],
-                Iterable[Union[
-                    Tuple[_FormElement, Union[str, bool], Union[str, bool]], Tuple[_FormElement, Union[str, bool]]]],
-            ],
-    ) -> None:
+    def add(self, *args: FORM_ELEMENTS_WITH_VALUES) -> None:
         """Add element to form.
 
         Args:
@@ -64,13 +57,13 @@ class Form:
         # Adding expected value as the third value for each field
         elif all(isinstance(e, tuple) for e in args):
             for _tuple in args:
-                self.elements.append(list(_tuple))
                 if len(_tuple) == 2:
-                    self.elements[-1].append(_tuple[1])
+                    _tuple = (_tuple[0], _tuple[1], _tuple[1])
+                self.elements.append(_tuple)
         else:
             raise TypeError(
                 "Method expects either two or three arguments, where first is an element and "
-                "second is a value or any number of tuple arguments!"
+                "second is a value or any number of tuple arguments and third is optional expected value!"
             )
 
     def complete(self) -> None:
@@ -88,25 +81,24 @@ class Form:
             raise FormError(f"Fatal error in form: '{self.form_id}'!")
 
     def _fill_values(self) -> None:
-        for element in self.elements:
-            element_class, value = element[0], element[1]
-            log_value = __class__.log_value(element_class, value)
+        for element_class, fill_value, expected_value in self.elements:
+            log_value = __class__.log_value(element_class, fill_value)
             logger.info(f"Fill in value: '{log_value}' in form: '{self.form_id}'.")
-            if isinstance(element_class, EditElement):
-                element_class.expected_value = element[2]
-            element_class.value = value
+            if hasattr(element_class, "expected_value"):
+                element_class.expected_value = expected_value
+            element_class.value = fill_value
             if self.delay:
                 sleep(self.delay)
 
     def _check_values(self) -> None:
-        for element in self.elements:
-            element_class, value = element[0], element[2]
-            log_value = __class__.log_value(element_class, value)
+        for element_class, filled_value, expected_value in self.elements:
+            log_value = __class__.log_value(element_class, expected_value)
             if not element_class.allow_check:
                 logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
                 continue
-            logger.info(f"Checking value: '{log_value}' in form: '{self.form_id}'.")
-            if element_class.value != value:
+            logger.info(f"Checking for expected value in form: '{self.form_id}'.")
+            logger.info(f"Filled value is '{filled_value}', expected value is '{expected_value}'.")
+            if element_class.value != expected_value:
                 if element_class.show_in_log:
                     logger.error(f"Value in form: '{element_class.value}' is not equal to value: '{log_value}'!")
                 else:
