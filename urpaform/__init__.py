@@ -1,2 +1,3 @@
 from .elements import *
-from .form import Form, FormError
+from .form import Form
+from .errors import *

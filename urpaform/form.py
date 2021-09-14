@@ -7,6 +7,7 @@ from time import sleep
 from typing import Any, Iterable, Tuple, Union
 
 from .elements import _FormElement
+from .errors import FormError, FormArgumentsError
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ class Form:
         elif all(isinstance(e, tuple) for e in args):
             self.elements.extend(args)
         else:
-            raise TypeError(
+            raise FormArgumentsError(
                 "Method expects either two arguments, where first is an element and "
                 "second is a value or any number of tuple arguments!"
             )
@@ -101,7 +102,3 @@ class Form:
         if element_class.show_in_log:
             return value
         return "****"
-
-
-class FormError(ValueError):
-    """If the Robot can not fill in the form correctly."""
