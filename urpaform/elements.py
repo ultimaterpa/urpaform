@@ -3,7 +3,7 @@
 from collections import Counter
 from typing import Tuple
 
-from .errors import KeyArgumentError, ValueTypeError, UnableToSetValue
+from .errors import ArgumentValueError, ValueTypeError, UnableToSetValue
 import urpa
 
 
@@ -71,13 +71,13 @@ class EditElement(_FormElement):
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
         if value_is_in not in self._VALUE_IS_IN:
-            raise KeyArgumentError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
+            raise ArgumentValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
         self.value_is_in = value_is_in
         self.clear_keys = clear_keys
         self.default_value = default_value
         send_method = send_method.lower()
         if send_method not in self._SEND_METHOD_IS_IN:
-            raise KeyArgumentError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
+            raise ArgumentValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check)
@@ -143,7 +143,7 @@ class PasswordElement(_FormElement):
         self.clear_keys = clear_keys
         send_method = send_method.lower()
         if send_method not in self._SEND_METHOD_IS_IN:
-            raise KeyArgumentError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
+            raise ArgumentValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
         super().__init__(element, show_in_log, allow_check=False)

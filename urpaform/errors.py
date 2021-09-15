@@ -9,7 +9,7 @@ class FormArgumentsError(TypeError):
     """If the arguments are given to Form in the bad type."""
 
 
-class KeyArgumentError(ValueError):
+class ArgumentValueError(ValueError):
     """If the value to key argument is not supported."""
 
 
