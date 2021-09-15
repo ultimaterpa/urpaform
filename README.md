@@ -176,3 +176,7 @@ radio_field = RadioElement(radio_element)
 test_form.add(radio_field, True)
 test_form.complete()
 ```
+
+## Changelog
+
+[Changelog is here](https://github.com/ultimaterpa/urpaform/blob/master/CHANGELOG.md)
