@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Outdated format methods for f-strings
+- Argument walk_type in ComboElement to set_method argument
 
 ### Fixed
 
