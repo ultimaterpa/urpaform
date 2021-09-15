@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - FormError
 - Typehints for all methods
+- Support for set_value from urpa
+- Clear method option for EditElement and PasswordElement
 
 ### Changed
 
