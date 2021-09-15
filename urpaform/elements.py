@@ -4,12 +4,28 @@ from collections import Counter
 from typing import Tuple
 
 import urpa
+from .constants import ALL_KEYBOARD_IDENTIFIERS
 
 
 class _FormElement:
     """A private class representing a common element in a form."""
 
-    def __init__(self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True) -> None:
+    _TEXT_ACTIONS = {
+        "wm_char": "WM_CHAR",
+        "hw_alt_code": "HW_Alt_code",
+        "hw_scan_virtual": "HW_Scan_Virtual",
+        "standard_alt_code": "Standard_Alt_code",
+        "standard_scan_virtual": "Standard_Scan_Virtual",
+    }
+
+    def __init__(
+        self,
+        element: urpa.AppElement,
+        show_in_log: bool = True,
+        allow_check: bool = True,
+        text_action: str = "wm_char",
+        keyboard: str = "00000409",
+    ) -> None:
         """Initiates instances of the _EditElem class.
 
         Args:
@@ -19,10 +35,24 @@ class _FormElement:
                 A flag used to log the values.
             allow_check: bool
                 A flag used to check the value after being filled in a form.
+            text_action: str
+                A flag used to set implicit type of writing text, by default is 'wm_char', other options are
+                'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
+            keyboard: str
+                A flag used to set the keyboard layout, by default is '00000409' - United States English,
+                other options are '00000405' - Czech and '0000041B' - Slovak
         """
         self.element = element
         self.show_in_log = show_in_log
         self.allow_check = allow_check
+        if text_action not in self._TEXT_ACTIONS.keys():
+            raise ValueError(f"Value in argument text_action must be from: '{self._TEXT_ACTIONS.keys()}'!")
+        self.text_action = self._TEXT_ACTIONS[text_action]
+        if keyboard.lower() not in ALL_KEYBOARD_IDENTIFIERS:
+            raise ValueError(f"Value in argument keyboard must be from: '{ALL_KEYBOARD_IDENTIFIERS}'!")
+        if keyboard != "00000409" and "scan_virtual" not in text_action:
+            raise ValueError(f"Argument 'keyboard' is available only for argument 'text_action=*_scan_virtual'!")
+        self.keyboard = keyboard
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} with element {self.element}."
@@ -47,6 +77,8 @@ class EditElement(_FormElement):
         default_value: str = "",
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
+        text_action: str = "wm_char",
+        keyboard: str = "00000409",
     ) -> None:
         """Initiates instances of the EditElement class.
 
@@ -68,6 +100,12 @@ class EditElement(_FormElement):
                 A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+            text_action: str
+                A flag used to set implicit type of writing text, by default is 'wm_char', other options are
+                'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
+            keyboard: str
+                A flag used to set the keyboard layout, by default is '00000409' - United States English,
+                other options are '00000405' - Czech and '0000041B' - Slovak
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -79,7 +117,7 @@ class EditElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
-        super().__init__(element, show_in_log, allow_check)
+        super().__init__(element, show_in_log, allow_check, text_action=text_action, keyboard=keyboard)
 
     @property
     def value(self) -> str:
@@ -100,7 +138,7 @@ class EditElement(_FormElement):
             if self.value != self.default_value:
                 self._clear()
             if self.send_method == "writing":
-                self.element.send_text(value)
+                self.element.send_text(value, action=self.text_action, kl=self.keyboard)
             elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
@@ -124,6 +162,8 @@ class PasswordElement(_FormElement):
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
+        text_action: str = "wm_char",
+        keyboard: str = "00000409",
     ) -> None:
         """Iniciates instances of the PasswordElement class.
 
@@ -138,6 +178,12 @@ class PasswordElement(_FormElement):
                 A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
+            text_action: str
+                A flag used to set implicit type of writing text, by default is 'wm_char', other options are
+                'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
+            keyboard: str
+                A flag used to set the keyboard layout, by default is '00000409' - United States English,
+                other options are '00000405' - Czech and '0000041B' - Slovak
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
@@ -145,7 +191,7 @@ class PasswordElement(_FormElement):
             raise ValueError(f"Value in argument send_method must be from: '{self._SEND_METHOD_IS_IN}'!")
         self.send_method = send_method
         self.paste_keys = paste_keys
-        super().__init__(element, show_in_log, allow_check=False)
+        super().__init__(element, show_in_log, allow_check=False, text_action=text_action, keyboard=keyboard)
 
     @property
     def value(self) -> str:
@@ -158,7 +204,7 @@ class PasswordElement(_FormElement):
         self.element.set_focus()
         self._clear()
         if self.send_method == "writing":
-            self.element.send_text(value)
+            self.element.send_text(value, action=self.text_action, kl=self.keyboard)
         elif self.send_method == "pasting":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
@@ -212,7 +258,13 @@ class ComboElement(_FormElement):
     _WALK_SETTER_MAX_COUNT = 3
 
     def __init__(
-        self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True, walk_type: bool = False
+        self,
+        element: urpa.AppElement,
+        show_in_log: bool = True,
+        allow_check: bool = True,
+        walk_type: bool = False,
+        text_action: str = "wm_char",
+        keyboard: str = "00000409",
     ):
         """Initiates instances of the Combobox class.
 
@@ -225,9 +277,15 @@ class ComboElement(_FormElement):
                 A flag used to check the value after being filled in a form.
             walk_type: bool
                 A flag used to determine the method for setting the value up.
+            text_action: str
+                A flag used to set implicit type of writing text, by default is 'wm_char', other options are
+                'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
+            keyboard: str
+                A flag used to set the keyboard layout, by default is '00000409' - United States English,
+                other options are '00000405' - Czech and '0000041B' - Slovak
         """
         self.walk_type = walk_type
-        super().__init__(element, show_in_log, allow_check)
+        super().__init__(element, show_in_log, allow_check, text_action=text_action, keyboard=keyboard)
 
     @property
     def value(self) -> str:
@@ -246,7 +304,7 @@ class ComboElement(_FormElement):
         """Default setter for value."""
         self.element.set_focus()
         if self.value != value:
-            self.element.send_text(value)
+            self.element.send_text(value, action=self.text_action, kl=self.keyboard)
 
     def _walk_setter(self, value: str) -> None:
         """Setter for value in a Combobox, where the send_text method
