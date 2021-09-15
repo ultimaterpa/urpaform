@@ -4,12 +4,22 @@ from __future__ import annotations
 
 import logging
 from time import sleep
-from typing import Any
+from typing import Any, Iterable, Tuple, Union
 
-from .aliases import FORM_ELEMENTS_WITH_VALUES
-from .elements import EditElement, _FormElement
+from .elements import _FormElement
 
 logger = logging.getLogger(__name__)
+
+ElementWithValue = Tuple[_FormElement, Union[str, bool]]
+ElementAlsoWithExpectedValue = Tuple[_FormElement, Union[str, bool], Union[str, bool]]
+
+ELEMENTS = (
+    Union[
+        ElementAlsoWithExpectedValue,
+        ElementWithValue,
+        Iterable[Union[ElementAlsoWithExpectedValue, ElementWithValue]],
+    ],
+)
 
 
 class Form:
@@ -40,7 +50,7 @@ class Form:
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
 
-    def add(self, *args: FORM_ELEMENTS_WITH_VALUES) -> None:
+    def add(self, *args: ELEMENTS) -> None:
         """Add element to form.
 
         Args:

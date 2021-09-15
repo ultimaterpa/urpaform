@@ -51,7 +51,7 @@ Alternatively, you can add multiple fields at once by passing any number of tupl
 # adding 1 field
 test_form.add(some_edit_field, "some value")
 
-# adding 1 EditElement field
+# adding 1 field with expected value
 test_form.add(some_edit_field, "12022021", "12.02.2021")
 
 # adding 2 fields as tuples
