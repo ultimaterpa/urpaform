@@ -1,8 +1,10 @@
-"""Testy pro urpaform"""
+"""Testy pro kontrolu typu a hodnoty pri vyplnovani formularu"""
 
 import pytest
 
+from urpa import AppElement
 from urpaform.elements import CheckElement, ComboElement, EditElement, PasswordElement, RadioElement
+from urpaform.form import Form
 
 
 @pytest.mark.parametrize(
@@ -35,3 +37,8 @@ def test_field_values_in_form(form, index, value) -> None:
 )
 def test_types_in_form(form, index_1, index_2, expected) -> None:
     assert isinstance(form.elements[index_1][index_2], expected)
+
+
+# def test_complete_method_form() -> None:
+#     with Form("test form") as test_form:
+#         test_form.add(EditElement(AppElement()), "Sunday")
