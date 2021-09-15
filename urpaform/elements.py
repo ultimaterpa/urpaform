@@ -1,6 +1,7 @@
 """Classes for elements that can be used in urpaform module."""
 
 from collections import Counter
+from typing import Tuple
 
 import urpa
 
@@ -8,7 +9,7 @@ import urpa
 class _FormElement:
     """A private class representing a common element in a form."""
 
-    def __init__(self, element, show_in_log=True, allow_check=True):
+    def __init__(self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True) -> None:
         """Initiates instances of the _EditElem class.
 
         Args:
@@ -23,10 +24,10 @@ class _FormElement:
         self.show_in_log = show_in_log
         self.allow_check = allow_check
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__} with element {self.element}."
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
 
@@ -38,15 +39,15 @@ class EditElement(_FormElement):
 
     def __init__(
         self,
-        element,
-        show_in_log=True,
-        allow_check=True,
-        value_is_in="value",
-        clear_keys=("CTRL+A", "DEL"),
-        default_value="",
-        send_method="writing",
-        paste_keys="CTRL+V",
-    ):
+        element: urpa.AppElement,
+        show_in_log: bool = True,
+        allow_check: bool = True,
+        value_is_in: str = "value",
+        clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
+        default_value: str = "",
+        send_method: str = "writing",
+        paste_keys: str = "CTRL+V",
+    ) -> None:
         """Initiates instances of the EditElement class.
 
         Args:
@@ -58,7 +59,7 @@ class EditElement(_FormElement):
                 A flag used to check the value after being filled in a form.
             value_is_in: str
                 Set the properties where the value is filled.
-            clear_keys: tuple
+            clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             default_value: str
                 A string of default value that cannot be removed from the editbox. For example,
@@ -81,7 +82,7 @@ class EditElement(_FormElement):
         super().__init__(element, show_in_log, allow_check)
 
     @property
-    def value(self):
+    def value(self) -> str:
         """Getter for value."""
         if self.value_is_in == "value":
             return self.element.value()
@@ -89,9 +90,10 @@ class EditElement(_FormElement):
             return self.element.name()
         if self.value_is_in == "text_value":
             return self.element.text_value().rstrip("\n")
+        return ""
 
     @value.setter
-    def value(self, value):
+    def value(self, value: str) -> None:
         """Setter for value."""
         self.element.set_focus()
         if self.value != value:
@@ -103,7 +105,7 @@ class EditElement(_FormElement):
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
 
-    def _clear(self):
+    def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
@@ -116,8 +118,13 @@ class PasswordElement(_FormElement):
     _SEND_METHOD_IS_IN = ("writing", "pasting")
 
     def __init__(
-        self, element, show_in_log=False, clear_keys=("CTRL+A", "DEL"), send_method="writing", paste_keys="CTRL+V"
-    ):
+        self,
+        element: urpa.AppElement,
+        show_in_log: bool = False,
+        clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
+        send_method: str = "writing",
+        paste_keys: str = "CTRL+V",
+    ) -> None:
         """Iniciates instances of the PasswordElement class.
 
         Args:
@@ -125,7 +132,7 @@ class PasswordElement(_FormElement):
                 Editbox for password maintained by the class.
             show_in_log: bool
                 A flag used to log the values.
-            clear_keys: tuple
+            clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             send_method: str
                 A string to specify the method of sending the value. Default value writing. Overwrite for pasting.
@@ -141,12 +148,12 @@ class PasswordElement(_FormElement):
         super().__init__(element, show_in_log, allow_check=False)
 
     @property
-    def value(self):
+    def value(self) -> str:
         """Getter for value."""
         return ""
 
     @value.setter
-    def value(self, value):
+    def value(self, value: str) -> None:
         """Setter for value."""
         self.element.set_focus()
         self._clear()
@@ -156,7 +163,7 @@ class PasswordElement(_FormElement):
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
 
-    def _clear(self):
+    def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
         for key in self.clear_keys:
@@ -167,12 +174,12 @@ class CheckElement(_FormElement):
     """A class used to represent a Checkbox in a form."""
 
     @property
-    def value(self):
+    def value(self) -> bool:
         """Getter for value."""
         return self.element.toggle_state()
 
     @value.setter
-    def value(self, value):
+    def value(self, value: bool) -> None:
         """Setter for value."""
         if not isinstance(value, bool):
             raise TypeError("Only True or False value is allowed for CheckBox!")
@@ -185,12 +192,12 @@ class RadioElement(_FormElement):
     """A class used to represent a Radio button in a form."""
 
     @property
-    def value(self):
+    def value(self) -> bool:
         """Getter for value."""
         return self.element.selected()
 
     @value.setter
-    def value(self, value):
+    def value(self, value: bool) -> None:
         """Setter for value."""
         if not value is True:
             raise TypeError("Only True value is allowed for RadioButton!")
@@ -204,7 +211,9 @@ class ComboElement(_FormElement):
 
     _WALK_SETTER_MAX_COUNT = 3
 
-    def __init__(self, element, show_in_log=True, allow_check=True, walk_type=False):
+    def __init__(
+        self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True, walk_type: bool = False
+    ):
         """Initiates instances of the Combobox class.
 
         Args:
@@ -221,29 +230,29 @@ class ComboElement(_FormElement):
         super().__init__(element, show_in_log, allow_check)
 
     @property
-    def value(self):
+    def value(self) -> str:
         """Getter for value."""
         return self.element.value()
 
     @value.setter
-    def value(self, value):
+    def value(self, value: str) -> None:
         """Setter for value."""
         if self.walk_type:
             self._walk_setter(value)
         else:
             self._default_setter(value)
 
-    def _default_setter(self, value):
+    def _default_setter(self, value: str) -> None:
         """Default setter for value."""
         self.element.set_focus()
         if self.value != value:
             self.element.send_text(value)
 
-    def _walk_setter(self, value):
+    def _walk_setter(self, value: str) -> None:
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
-        walk_setter_counter = Counter()
+        walk_setter_counter: Counter = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:
