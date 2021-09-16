@@ -6,6 +6,7 @@ import logging
 from time import sleep
 from typing import Any, Iterable, Tuple, Union
 
+import urpa
 from .elements import _FormElement
 
 logger = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ class Form:
 
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
+        urpa.set_clipboard_text("")
 
     def add(self, *args: Union[Tuple[_FormElement, str], Iterable[Tuple[_FormElement, str]]]) -> None:
         """Add element to form.
@@ -64,6 +66,7 @@ class Form:
         for attempt in range(1, self.attempts + 1):
             logger.info(f"This is {attempt}. attempt to complete form: '{self.form_id}'.")
             self._fill_values()
+            urpa.set_clipboard_text("")
             try:
                 self._check_values()
             except FormError:
