@@ -36,8 +36,8 @@ class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
     _VALUE_IS_IN = ("value", "name", "text_value")
-    _SEND_METHOD_IS_IN = ("writing", "pasting", "set_value")
-    _CLEAR_METHOD_IS_IN = ("keys", "set_empty_string", "no_clearing")
+    _SEND_METHOD_IS_IN = ("send_text", "paste", "set_value")
+    _CLEAR_METHOD_IS_IN = ("clear_keys", "empty_string", "no_clearing")
 
     def __init__(
         self,
@@ -45,10 +45,10 @@ class EditElement(_FormElement):
         show_in_log: bool = True,
         allow_check: bool = True,
         value_is_in: str = "value",
-        clear_method: str = "keys",
+        clear_method: str = "clear_keys",
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         default_value: str = "",
-        send_method: str = "writing",
+        send_method: str = "send_text",
         paste_keys: str = "CTRL+V",
     ) -> None:
         """Initiates instances of the EditElement class.
@@ -63,16 +63,16 @@ class EditElement(_FormElement):
             value_is_in: str
                 Set the properties where the value is filled.
             clear_method: str
-                A flag used to set the option to clear the field, by default 'keys',
-                other options are 'set_empty_string' and 'no_clearing'.
+                A flag used to set the option to clear the field, by default 'clear_keys',
+                other options are 'empty_string' and 'no_clearing'.
             clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             default_value: str
                 A string of default value that cannot be removed from the editbox. For example,
                 predefined dots for a date.
             send_method: str
-                A string to specify the method of sending the value. Default value 'writing'.
-                other options are 'pasting' or 'set_value'.
+                A string to specify the method of sending the value. Default value 'send_text'.
+                other options are 'paste' or 'set_value'.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
@@ -109,9 +109,9 @@ class EditElement(_FormElement):
         if self.value != value:
             if self.value != self.default_value:
                 self._clear()
-            if self.send_method == "writing":
+            if self.send_method == "send_text":
                 self.element.send_text(value)
-            elif self.send_method == "pasting":
+            elif self.send_method == "paste":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
             elif self.send_method == "set_value":
@@ -120,10 +120,10 @@ class EditElement(_FormElement):
     def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
-        if self.clear_method == "keys":
+        if self.clear_method == "clear_keys":
             for key in self.clear_keys:
                 self.element.send_key(key)
-        elif self.clear_method == "set_empty_string":
+        elif self.clear_method == "empty_string":
             self.element.set_value("")
         elif self.clear_method == "no_clearing":
             pass
@@ -132,16 +132,16 @@ class EditElement(_FormElement):
 class PasswordElement(_FormElement):
     """A class used to represent a Passwordbox in a form."""
 
-    _SEND_METHOD_IS_IN = ("writing", "pasting", "set_value")
-    _CLEAR_METHOD_IS_IN = ("keys", "set_empty_string", "no_clearing")
+    _SEND_METHOD_IS_IN = ("send_text", "paste", "set_value")
+    _CLEAR_METHOD_IS_IN = ("clear_keys", "empty_string", "no_clearing")
 
     def __init__(
         self,
         element: urpa.AppElement,
         show_in_log: bool = False,
-        clear_method: str = "keys",
+        clear_method: str = "clear_keys",
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
-        send_method: str = "writing",
+        send_method: str = "send_text",
         paste_keys: str = "CTRL+V",
     ) -> None:
         """Iniciates instances of the PasswordElement class.
@@ -152,13 +152,13 @@ class PasswordElement(_FormElement):
             show_in_log: bool
                 A flag used to log the values.
             clear_method: str
-                A flag used to set the option to clear the field, by default 'keys',
-                other options are 'set_empty_string' and 'no_clearing'
+                A flag used to set the option to clear the field, by default 'clear_keys',
+                other options are 'empty_string' and 'no_clearing'
             clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             send_method: str
-                A string to specify the method of sending the value. Default value 'writing'.
-                other options are 'pasting' or 'set_value'.
+                A string to specify the method of sending the value. Default value 'send_text'.
+                other options are 'paste' or 'set_value'.
             paste_keys: str
                 Keys used to paste into the editbox. Default CTRL+V. Overwrite for other shortcut.
         """
@@ -183,9 +183,9 @@ class PasswordElement(_FormElement):
         """Setter for value."""
         self.element.set_focus()
         self._clear()
-        if self.send_method == "writing":
+        if self.send_method == "send_text":
             self.element.send_text(value)
-        elif self.send_method == "pasting":
+        elif self.send_method == "paste":
             urpa.set_clipboard_text(value)
             self.element.send_key(self.paste_keys)
         elif self.send_method == "set_value":
@@ -194,10 +194,10 @@ class PasswordElement(_FormElement):
     def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
-        if self.clear_method == "keys":
+        if self.clear_method == "clear_keys":
             for key in self.clear_keys:
                 self.element.send_key(key)
-        elif self.clear_method == "set_empty_string":
+        elif self.clear_method == "empty_string":
             self.element.set_value("")
         elif self.clear_method == "no_clearing":
             pass
@@ -243,10 +243,14 @@ class ComboElement(_FormElement):
     """A class used to represent a Combobox in a form."""
 
     _WALK_SETTER_MAX_COUNT = 3
-    _SET_METHOD_IS_IN = ("text", "walk", "set_value")
+    _SET_METHOD_IS_IN = ("send_text", "walk", "set_value")
 
     def __init__(
-        self, element: urpa.AppElement, show_in_log: bool = True, allow_check: bool = True, set_method: str = "text"
+        self,
+        element: urpa.AppElement,
+        show_in_log: bool = True,
+        allow_check: bool = True,
+        set_method: str = "send_text",
     ):
         """Initiates instances of the Combobox class.
 
@@ -258,7 +262,7 @@ class ComboElement(_FormElement):
             allow_check: bool
                 A flag used to check the value after being filled in a form.
             set_method: str
-                A string to specify the method of setting the value. Default value text.
+                A string to specify the method of setting the value. Default value send_text.
                 Overwrite for walk or set_value.
         """
         if set_method not in self._SET_METHOD_IS_IN:
@@ -274,7 +278,7 @@ class ComboElement(_FormElement):
     @value.setter
     def value(self, value: str) -> None:
         """Setter for value."""
-        if self.set_method == "text":
+        if self.set_method == "send_text":
             self._text_setter(value)
         elif self.set_method == "walk":
             self._walk_setter(value)

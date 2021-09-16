@@ -81,9 +81,11 @@ value in a password box cannot be checked. The password itself can be stored in
 Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
 in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).  
 There is optional argument 'clear_method', which can have values: 
-- "keys" - set by default, value will be deleted with the keyboard shortcut "CTRL+A" + "DEL"
-- "set_empty_string" - value inside the field will be changed to an empty string
+- "clear_keys" - set by default, value will be deleted with the keyboard shortcut "CTRL+A" + "DEL"
+- "empty_string" - value inside the field will be changed to an empty string
 - "no_clearing - nothing will happen, value will remain inside the field
+There are more ways to fill an edit box with a value. The default `send_method` is `send_text` using keyboard input. You can switch to pasting the value into the field from clipboard by setting `send_method` to `paste` and `paste_keys` at demanded paste shortcut (default CTRL+V).
+And finally, you can overwrite the `send_method` with `set_value` to set the value of your object via MSAA interface.
 
 ```python
 from urpaform import PasswordElement
@@ -91,7 +93,7 @@ from urpaform import PasswordElement
 app = urpa.exec_app("Some_application.exe")
 password = urpa.get_password(system, user)
 password_element = app.find_first(cf.name("Password").edit())
-password_field = PasswordElement(password_element, clear_method="set_empty_string")
+password_field = PasswordElement(password_element, clear_method="empty_string", send_method="set_value")
 test_form = Form("my forms's name")
 test_form.add(password_field, password)
 test_form.complete()
@@ -104,9 +106,9 @@ When [inspecting](https://www.ultimaterpa.com/documentation/_search_elements.htm
 You can control the respective set up with `value_is_in` parameter.
 - Some can contain a default value that cannot be removed from the edit box. For example, 
 predefined dots for a date. You can use the `default_value` parameter.
-- The default `clear_method` is set to `keys` with an option to define your own combination of keys with `clear_keys` to clear the field (in case the default setting fails for your application). 
-- Alternatively, you can overwrite `clear_method` with `set_value` to empty the field via MSAA interface.
-- There are more ways to fill an edit box with a value. The default `send_method` is `writing` using keyboard input. You can switch to pasting the value into the field from clipboard by setting `send_method` to `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
+- The default `clear_method` is set to `clear_keys` with an option to define your own combination of keys with `clear_keys` to clear the field (in case the default setting fails for your application). 
+- Another options for `clear_method` are `empty_string`, this will set in field an empty string and `no_clearing`, which does nothing
+- There are more ways to fill an edit box with a value. The default `send_method` is `send_text` using keyboard input. You can switch to pasting the value into the field from clipboard by setting `send_method` to `paste` and `paste_keys` at demanded paste shortcut (default CTRL+V).
 And finally, you can overwrite the `send_method` with `set_value` to set the value of your object via MSAA interface.
 
 ```python
@@ -115,7 +117,7 @@ from urpaform import Form, EditElement
 
 app = urpa.exec_app("Some_application.exe")
 edit_element = app.find_first(cf.name("Username").edit())
-edit_field = EditElement(edit_element, value_is_in="name", default_value="  .  .    ")
+edit_field = EditElement(edit_element, value_is_in="name", default_value="  .  .    ", send_method="set_value", clear_method="empty_string")
 test_form = Form("my forms's name")
 test_form.add(edit_field, "UltimateRPA")
 test_form.complete()
@@ -128,7 +130,7 @@ Based on specific behavior of the combo box in your form, you can choose the met
 to fill in your desired value. Many would accept the desired value as a text. For others,
 you have to change optional argument `set_method`.   
 There are 3 options:
-- "text" - set by default, value inside the combo box will be filled by writing a given text
+- "send_text" - set by default, value inside the combo box will be filled by writing a given text
 - "walk" - value will be choosen by walking through all available values in the 
 combo box to find the desired one
 - "set_value" - whole text value will be set inside the combo box
