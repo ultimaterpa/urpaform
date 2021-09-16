@@ -17,7 +17,7 @@ class AppElement:
 
     @property
     def value(self):
-        return "value elementu"
+        pass
 
     def set_focus(self):
         pass
