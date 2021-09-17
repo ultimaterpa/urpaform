@@ -15,8 +15,13 @@ class Condition:
 
 class AppElement:
 
-    @property
     def value(self):
+        pass
+
+    def name(self):
+        pass
+
+    def text_value(self):
         pass
 
     def set_focus(self):

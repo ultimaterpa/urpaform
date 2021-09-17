@@ -1,8 +1,8 @@
-"""Testy pro kontrolu exceptions"""
-
-import pytest
+"""Tests, which check raising exceptions in urpaform"""
 
 from unittest.mock import Mock
+
+import pytest
 
 from urpa import AppElement
 from urpaform.elements import CheckElement, EditElement, PasswordElement, RadioElement
@@ -60,3 +60,18 @@ def test_complete_method_exception() -> None:
 
         test_form.complete.side_effect = FormError
         test_form.complete()
+
+
+def test_formerror_exception() -> None:
+    """Checks FormError exception inside _check_values in Form class"""
+
+    value_to_fill = "Sunday"
+    edit_elem = Mock(EditElement(AppElement()))
+
+    test_form = Form("test form")
+    test_form.add(edit_elem, value_to_fill)
+
+    edit_elem.value = "Saturday"
+
+    with pytest.raises(FormError):
+        test_form._check_values()
