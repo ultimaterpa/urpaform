@@ -7,6 +7,10 @@ import urpa
 from .constants import ALL_KEYBOARD_IDENTIFIERS
 
 
+DEFAULT_KEYBOARD = "00000409"
+DEFAULT_TEXT_ACTION = "wm_char"
+
+
 class _FormElement:
     """A private class representing a common element in a form."""
 
@@ -23,8 +27,8 @@ class _FormElement:
         element: urpa.AppElement,
         show_in_log: bool = True,
         allow_check: bool = True,
-        text_action: str = "wm_char",
-        keyboard: str = "00000409",
+        text_action: str = DEFAULT_TEXT_ACTION,
+        keyboard: str = DEFAULT_KEYBOARD,
     ) -> None:
         """Initiates instances of the _EditElem class.
 
@@ -40,7 +44,7 @@ class _FormElement:
                 'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
             keyboard: str
                 A flag used to set the keyboard layout, by default is '00000409' - United States English,
-                other options are '00000405' - Czech and '0000041B' - Slovak
+                for other options see ALL_KEYBOARD_IDENTIFIERS in constants.py
         """
         self.element = element
         self.show_in_log = show_in_log
@@ -77,8 +81,8 @@ class EditElement(_FormElement):
         default_value: str = "",
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
-        text_action: str = "wm_char",
-        keyboard: str = "00000409",
+        text_action: str = DEFAULT_TEXT_ACTION,
+        keyboard: str = DEFAULT_KEYBOARD,
     ) -> None:
         """Initiates instances of the EditElement class.
 
@@ -105,7 +109,7 @@ class EditElement(_FormElement):
                 'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
             keyboard: str
                 A flag used to set the keyboard layout, by default is '00000409' - United States English,
-                other options are '00000405' - Czech and '0000041B' - Slovak
+                for other options see ALL_KEYBOARD_IDENTIFIERS in constants.py
         """
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
@@ -162,8 +166,8 @@ class PasswordElement(_FormElement):
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         send_method: str = "writing",
         paste_keys: str = "CTRL+V",
-        text_action: str = "wm_char",
-        keyboard: str = "00000409",
+        text_action: str = DEFAULT_TEXT_ACTION,
+        keyboard: str = DEFAULT_KEYBOARD,
     ) -> None:
         """Iniciates instances of the PasswordElement class.
 
@@ -183,7 +187,7 @@ class PasswordElement(_FormElement):
                 'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
             keyboard: str
                 A flag used to set the keyboard layout, by default is '00000409' - United States English,
-                other options are '00000405' - Czech and '0000041B' - Slovak
+                for other options see ALL_KEYBOARD_IDENTIFIERS in constants.py
         """
         self.clear_keys = clear_keys
         send_method = send_method.lower()
@@ -263,8 +267,8 @@ class ComboElement(_FormElement):
         show_in_log: bool = True,
         allow_check: bool = True,
         walk_type: bool = False,
-        text_action: str = "wm_char",
-        keyboard: str = "00000409",
+        text_action: str = DEFAULT_TEXT_ACTION,
+        keyboard: str = DEFAULT_KEYBOARD,
     ):
         """Initiates instances of the Combobox class.
 
@@ -282,7 +286,7 @@ class ComboElement(_FormElement):
                 'hw_alt_code', 'hw_scan_virtual', 'standard_alt_code', 'standard_scan_virtual'
             keyboard: str
                 A flag used to set the keyboard layout, by default is '00000409' - United States English,
-                other options are '00000405' - Czech and '0000041B' - Slovak
+                for other options see ALL_KEYBOARD_IDENTIFIERS in constants.py
         """
         self.walk_type = walk_type
         super().__init__(element, show_in_log, allow_check, text_action=text_action, keyboard=keyboard)
