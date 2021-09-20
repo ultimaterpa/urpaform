@@ -13,13 +13,13 @@ from urpaform.form import Form
 
 @pytest.mark.parametrize(
     "index, value",
-    [
-        (0, "John Doe"),
-        (1, "1234"),
-        (2, True),
-        (3, True),
-        (4, "Monday"),
-    ],
+    enumerate([
+        "John Doe",
+        "1234",
+        True,
+        True,
+        "Monday",
+    ])
 )
 def test_field_values_in_form(form, index, value) -> None:
     """Checks exact values inside the Form"""
