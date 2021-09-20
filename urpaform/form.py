@@ -63,12 +63,12 @@ class Form:
         if len(args) == 2 and isinstance(args[0], _FormElement):
             self.elements.append([args[0], args[1], args[1]])
         elif len(args) == 3 and isinstance(args[0], _FormElement):
-            self.elements.append([args[0], args[1], args[2]])
+            self.elements.append([*args])
         # Adding expected value as the third value for each field
         elif all(isinstance(e, tuple) for e in args):
             for _tuple in args:
                 if len(_tuple) == 2:
-                    _tuple = (_tuple[0], _tuple[1], _tuple[1])
+                    _tuple = (*_tuple, _tuple[1])
                 self.elements.append(_tuple)
         else:
             raise TypeError(
@@ -97,8 +97,7 @@ class Form:
             if hasattr(element_class, "expected_value"):
                 element_class.expected_value = expected_value
             element_class.value = fill_value
-            if self.delay:
-                sleep(self.delay)
+            sleep(self.delay)
 
     def _check_values(self) -> None:
         for element_class, filled_value, expected_value in self.elements:
