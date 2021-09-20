@@ -39,7 +39,6 @@ class Form:
 
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
-        urpa.set_clipboard_text("")
 
     def add(self, *args: Union[Tuple[_FormElement, str], Iterable[Tuple[_FormElement, str]]]) -> None:
         """Add element to form.
