@@ -20,8 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - outdated format methods for f-strings
+- Clipboard is now automatically cleared, when used
 - argument `walk_type` in ComboElement to `set_method` argument
-- assigned value to ComboElement argument `set_method` from `text` to `send_text`
+- assigned value to ComboElement in argument `set_method` from `text` to `send_text`
 - naming of assigned values for `send_method` in EditElement and PasswordElement
   - `writing` to `send_text`
   - `pasting` to `paste`
