@@ -6,6 +6,7 @@ import logging
 from time import sleep
 from typing import Any, Iterable, Tuple, Union
 
+import urpa
 from .elements import _FormElement
 from .errors import FormError, FormArgumentsError
 
@@ -65,6 +66,7 @@ class Form:
         for attempt in range(1, self.attempts + 1):
             logger.info(f"This is {attempt}. attempt to complete form: '{self.form_id}'.")
             self._fill_values()
+            urpa.set_clipboard_text("")
             try:
                 self._check_values()
             except FormError:
