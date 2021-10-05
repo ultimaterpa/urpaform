@@ -1,6 +1,7 @@
 """Classes for elements that can be used in urpaform module."""
 
 from collections import Counter
+import typing
 from typing import Tuple
 
 import urpa
@@ -85,11 +86,11 @@ class EditElement(_FormElement):
     def value(self) -> str:
         """Getter for value."""
         if self.value_is_in == "value":
-            return self.element.value()
+            return str(self.element.value())
         if self.value_is_in == "name":
-            return self.element.name()
+            return str(self.element.name())
         if self.value_is_in == "text_value":
-            return self.element.text_value()[:-1]
+            return str(self.element.text_value().rstrip("\n"))
         return ""
 
     @value.setter
@@ -176,7 +177,7 @@ class CheckElement(_FormElement):
     @property
     def value(self) -> bool:
         """Getter for value."""
-        return self.element.toggle_state()
+        return bool(self.element.toggle_state())
 
     @value.setter
     def value(self, value: bool) -> None:
@@ -194,7 +195,7 @@ class RadioElement(_FormElement):
     @property
     def value(self) -> bool:
         """Getter for value."""
-        return self.element.selected()
+        return bool(self.element.selected())
 
     @value.setter
     def value(self, value: bool) -> None:
@@ -232,7 +233,7 @@ class ComboElement(_FormElement):
     @property
     def value(self) -> str:
         """Getter for value."""
-        return self.element.value()
+        return str(self.element.value())
 
     @value.setter
     def value(self, value: str) -> None:
@@ -252,7 +253,7 @@ class ComboElement(_FormElement):
         """Setter for value in a Combobox, where the send_text method
         cannot be used to set the value up.
         """
-        walk_setter_counter: Counter = Counter()
+        walk_setter_counter: typing.Counter[str] = Counter()
         self.element.set_focus()
         self.element.send_key("HOME")
         while self.value != value:

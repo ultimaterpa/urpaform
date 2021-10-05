@@ -1,0 +1,32 @@
+# This workflow will install Python dependencies, check with Black, lint with pylint, run tests, check with mypy
+
+name: urpaform
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements_dev.txt
+      - name: Lint with pylint
+        run: |
+          pylint urpaform
+      - name: Test with pytest
+        run: |
+          pytest
+      - name: Check with mypy
+        run: |
+          mypy urpaform
+

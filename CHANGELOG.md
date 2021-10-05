@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - FormError
 - Typehints for all methods
+- GitHub Actions, automatic check with pylint, pytest and mypy
 
 ### Changed
 

@@ -26,7 +26,7 @@ class Form:
             delay: int
                 Specifies wait time between each attempt
         """
-        self.elements: list = []
+        self.elements: list = []  # type: ignore
         self.form_id = form_id
         self.attempts = attempts
         self.delay = delay
@@ -40,7 +40,13 @@ class Form:
     def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.complete()
 
-    def add(self, *args: Union[Tuple[_FormElement, str], Iterable[Tuple[_FormElement, str]]]) -> None:
+    def add(
+        self,
+        *args: Union[
+            Tuple[_FormElement, Union[str, bool]],
+            Iterable[Tuple[_FormElement, Union[str, bool]]]
+        ]
+    ) -> None:
         """Add element to form.
 
         Args:
@@ -51,7 +57,7 @@ class Form:
                     Tuple in format (Element, Value)
         """
         if len(args) == 2 and isinstance(args[0], _FormElement):
-            self.elements.append((args[0], args[1]))
+            self.elements.append((args[0], args[1]))  # type: ignore
         elif all(isinstance(e, tuple) for e in args):
             self.elements.extend(args)
         else:
@@ -77,7 +83,7 @@ class Form:
 
     def _fill_values(self) -> None:
         for element_class, value in self.elements:
-            log_value = __class__.log_value(element_class, value)
+            log_value = self.__class__.log_value(element_class, value)
             logger.info(f"Fill in value: '{log_value}' in form: '{self.form_id}'.")
             element_class.value = value
             if self.delay:
@@ -85,7 +91,7 @@ class Form:
 
     def _check_values(self) -> None:
         for element_class, value in self.elements:
-            log_value = __class__.log_value(element_class, value)
+            log_value = self.__class__.log_value(element_class, value)
             if not element_class.allow_check:
                 logger.warning(f"Checking for value: '{log_value}' in form: '{self.form_id}' is not allowed!")
                 continue
