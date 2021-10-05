@@ -89,7 +89,7 @@ class EditElement(_FormElement):
         if self.value_is_in == "name":
             return self.element.name()
         if self.value_is_in == "text_value":
-            return self.element.text_value().rstrip("\n")
+            return self.element.text_value()[:-1]
         return ""
 
     @value.setter

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Outdated format methods for f-strings
+- Clipboard is now automatically cleared, when used
 - Extended error message for FormError
 
 ### Fixed
