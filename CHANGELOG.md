@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - FormError
 - Typehints for all methods
+- GitHub Actions, automatic check with pylint, pytest and mypy
 
 ### Changed
 
 - Outdated format methods for f-strings
+- Clipboard is now automatically cleared, when used
 
 ### Fixed
 
