@@ -75,7 +75,7 @@ test_form.complete()
 
 ### Maintaining a Password Box
 
-Maintenance of a password box is similar to an edit box. You can even chose
+Maintenance of a password box is similar to an edit box. You can even choose
 between keyboard input and pasting just like in edit box. However, the filled 
 value in a password box cannot be checked. The password itself can be stored in 
 Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
