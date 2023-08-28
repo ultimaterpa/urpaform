@@ -1,0 +1,8 @@
+"""Information about urpaform module."""
+__title__ = "urpaform"
+__description__ = "Form Filling Module with UltimateRPA"
+__version__ = "0.1.0"
+__author__ = "anerold"
+__author_email__ = "support@ultimaterpa.cz"
+__url__ = "https://github.com/ultimaterpa/urpaform"
+__license__ = "MIT"
