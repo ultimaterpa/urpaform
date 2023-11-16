@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog
 - FormError
 - Typehints for all methods
+- Optional argument text_action, which sets the default text typing for EditElement, PasswordElement and ComboElement
+- Optional argument keyboard, which specifies keyboard identifier
 
 ### Changed
 

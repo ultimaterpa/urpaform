@@ -79,7 +79,14 @@ Maintenance of a password box is similar to an edit box. You can even choose
 between keyboard input and pasting just like in edit box. However, the filled 
 value in a password box cannot be checked. The password itself can be stored in 
 Windows Credential Vault and retrieved with `urpa.get_password()`. More details 
-in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).
+in [Vault Tutorial and documentation](https://www.ultimaterpa.com/documentation/_vault.html).   
+You can specify optional `text_action` argument, which sets default text typing,
+options are `wm_char` - by default, `hw_alt_code`, `hw_scan_virtual`, `standard_alt_code` and `standard_scan_virtual`.
+
+If you set `text_action` on *_scan_virtual, then you can specify additional `keyboard` identifier argument:
+- 00000409 - by default, English (United Stated)
+- 00000405 - Czech
+- All layouts on [this](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values) link
 
 ```python
 from urpaform import PasswordElement
@@ -87,7 +94,7 @@ from urpaform import PasswordElement
 app = urpa.exec_app("Some_application.exe")
 password = urpa.get_password(system, user)
 password_element = app.find_first(cf.name("Password").edit())
-password_field = PasswordElement(password_element)
+password_field = PasswordElement(password_element, text_action="standard_scan_virtual", keyboard="00000405")
 test_form = Form("my forms's name")
 test_form.add(password_field, password)
 test_form.complete()
@@ -103,6 +110,14 @@ predefined dots for a date. You can use the `default_value` parameter.
 - You have an option to define your own combination of keys with `clear_keys` to clear 
 the field, in case the default setting fails for your application.
 - There is na alternative way to fill an edit box (default method is `writing` using keyboard input). You can switch to pasting the value into the field from clipboard by setting `send_method` at `pasting` and `paste_keys` at demanded paste shortcut (default CTRL+V).
+- You can specify optional `text_action` argument, which sets default text typing,
+options are `wm_char` - by default, `hw_alt_code`, `hw_scan_virtual`, `standard_alt_code` and `standard_scan_virtual`.
+
+- If you set `text_action` on *_scan_virtual, then you can specify additional `keyboard` identifier argument:
+  - 00000409 - by default, English (United Stated)
+  - 00000405 - Czech
+  - All layouts on [this](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values) link
+
 
 ```python
 
@@ -110,9 +125,12 @@ from urpaform import Form, EditElement
 
 app = urpa.exec_app("Some_application.exe")
 edit_element = app.find_first(cf.name("Username").edit())
+edit_element_2 = app.find_first(cf.name("Surname").edit())
 edit_field = EditElement(edit_element, value_is_in="name", default_value="  .  .    ")
+edit_field_2 = EditElement(edit_element_2, text_action="hw_scan_virtual", keyboard="0000041B")
 test_form = Form("my forms's name")
 test_form.add(edit_field, "UltimateRPA")
+test_form.add(edit_field_2, "Ľupták")
 test_form.complete()
 ```
 
@@ -126,6 +144,15 @@ combo box to find the desired one.
 
 It is recommended to use the default method and to use the other method only if the 
 default method fails to set the value in your combo box.
+
+You can specify optional `text_action` argument, which sets default text typing,
+options are `wm_char` - by default, `hw_alt_code`, `hw_scan_virtual`, `standard_alt_code` and `standard_scan_virtual`.
+
+If you set `text_action` on *_scan_virtual, then you can specify additional `keyboard` identifier argument:
+- 00000409 - by default, English (United Stated)
+- 00000405 - Czech
+- All layouts on [this](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values) link
+
 
 ```python
 from urpaform import Form, ComboElement
