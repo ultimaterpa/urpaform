@@ -62,18 +62,21 @@ class Form:
 
     def complete(self) -> None:
         """Complete elements in form with values."""
+        message = ""
         for attempt in range(1, self.attempts + 1):
             logger.info(f"This is {attempt}. attempt to complete form: '{self.form_id}'.")
             self._fill_values()
             urpa.set_clipboard_text("")
             try:
                 self._check_values()
-            except FormError:
+            except FormError as e_msg:
+                logger.warning(f"Fatal error in form: '{self.form_id}' - '{message}'")
+                message = e_msg
                 continue
             logger.info(f"Form: '{self.form_id}' successfully completed.")
             break
         else:
-            raise FormError(f"Fatal error in form: '{self.form_id}'!")
+            raise FormError(f"Fatal error in form: '{self.form_id}' - '{message}'")
 
     def _fill_values(self) -> None:
         for element_class, value in self.elements:
@@ -95,7 +98,7 @@ class Form:
                     logger.error(f"Value in form: '{element_class.value}' is not equal to value: '{log_value}'!")
                 else:
                     logger.error("Value in form is not equal to value!")
-                raise FormError
+                raise FormError(f"Unable to insert correctly '{value}' to '{element_class}'")
 
     @staticmethod
     def log_value(element_class: _FormElement, value: str) -> str:
