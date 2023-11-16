@@ -73,6 +73,28 @@ test_form.add(combo_field, "Saturday")
 test_form.complete()
 ```
 
+### Choosing, how to focus certain field
+
+Sometimes it can come handy, if you can set up, how to focus certain field in a form.   
+For this purpose, there is optional argument `focus_action`, which defines this functionality.   
+This attribute can be specified for all types of field.
+There are 3 options:   
+- `default` - set up by default, can be used with a hidden desktop, but takes longer time to process  
+- `mouse` - the field is focused with a mouse click  
+- `none` - the field will not be enabled 
+
+```python
+from urpaform import EditElement, Form
+
+app = urpa.exec_app("Some_application.exe")
+
+name_element = app.find_first(cf.name("Username").edit())
+name_field = EditElement(name_element, focus_action="mouse")
+with Form("my forms's name") as test_form:
+	test_form.add(name_field, "John")
+```
+
+
 ### Maintaining a Password Box
 
 Maintenance of a password box is similar to an edit box. You can even choose
