@@ -35,7 +35,8 @@ class EditElement(_FormElement):
     """A class used to represent a common Editbox in a form."""
 
     _VALUE_IS_IN = ("value", "name", "text_value")
-    _SEND_METHOD_IS_IN = ("writing", "pasting")
+    _SEND_METHOD_IS_IN = ("writing", "pasting", "setting")
+    _CLEAR_METHOD_IS_IN = ("keys", "set_empty_string", "no_clearing")
 
     def __init__(
         self,
@@ -43,6 +44,7 @@ class EditElement(_FormElement):
         show_in_log: bool = True,
         allow_check: bool = True,
         value_is_in: str = "value",
+        clear_method: str = "keys",
         clear_keys: Tuple[str, str] = ("CTRL+A", "DEL"),
         default_value: str = "",
         send_method: str = "writing",
@@ -59,6 +61,8 @@ class EditElement(_FormElement):
                 A flag used to check the value after being filled in a form.
             value_is_in: str
                 Set the properties where the value is filled.
+            clear_method: str
+                Method to used for clearing the Element
             clear_keys: Tuple[str, str]
                 Keys used to clear the editbox.
             default_value: str
@@ -72,6 +76,9 @@ class EditElement(_FormElement):
         if value_is_in not in self._VALUE_IS_IN:
             raise ValueError(f"Value in argument value_is_in must be from: '{self._VALUE_IS_IN}'!")
         self.value_is_in = value_is_in
+        if clear_method not in self._CLEAR_METHOD_IS_IN:
+            raise ValueError(f"Value in argument clear method must be from: '{self._CLEAR_METHOD_IS_IN}'")
+        self.clear_method = clear_method
         self.clear_keys = clear_keys
         self.default_value = default_value
         send_method = send_method.lower()
@@ -104,12 +111,19 @@ class EditElement(_FormElement):
             elif self.send_method == "pasting":
                 urpa.set_clipboard_text(value)
                 self.element.send_key(self.paste_keys)
+            elif self.send_method == "setting":
+                self.element.set_value(value)
 
     def _clear(self) -> None:
         """Clears the editbox."""
         self.element.set_focus()
-        for key in self.clear_keys:
-            self.element.send_key(key)
+        if self.clear_method == "keys":
+            for key in self.clear_keys:
+                self.element.send_key(key)
+        elif self.clear_method == "set_empty_string":
+            self.element.set_value("")
+        elif self.clear_method == "no_clearing":
+            pass
 
 
 class PasswordElement(_FormElement):
